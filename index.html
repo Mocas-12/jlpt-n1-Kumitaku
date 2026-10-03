@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>Kumitaku · JLPT N1 文法特訓</title>
+<script>
+/* 主题初始化：在样式表解析前定下 data-theme，避免暗色用户看到闪白；
+   theme-color meta 同步（defer 的题库会拖住 DOMContentLoaded，否则地址栏首帧是错的主题色） */
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('kt_theme'); } catch (e) {}
+  if (t !== 'dark' && t !== 'light') t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  var m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute('content', t === 'dark' ? '#171521' : '#16608c');
+})();
+</script>
+<link rel="icon" type="image/svg+xml" href="public/logo.svg">
+<link rel="apple-touch-icon" href="public/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="description" content="按官方三大题型（文法形式の判断・文の組み立て・文章の文法）整理 JLPT N1 文法解题技巧：近义文型辨析、计时训练、逐选项解析、错题重练闭环。内置原创模拟题库（非真题），练习数据只保存在你的浏览器里。">
+<meta name="theme-color" content="#16608c">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kumitaku">
+<meta property="og:title" content="Kumitaku · JLPT N1 文法特訓">
+<meta property="og:description" content="三大题型解题技巧 ＋ 近义文型辨析 ＋ 计时训练 ＋ 逐选项解析 ＋ 错题重练闭环；内置原创模拟题库，数据只存本地浏览器。">
+<meta property="og:url" content="https://mocas-12.github.io/jlpt-n1-Kumitaku/">
+<meta property="og:image" content="https://mocas-12.github.io/jlpt-n1-Kumitaku/public/og-banner.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=0307ba90">
+</head>
+<body>
+
+<div class="support-banner">
+  <span class="sb-text">❤️ 支持开发者，请投币</span>
+  <span class="sb-arrow" aria-hidden="true">→</span>
+  <button type="button" class="sb-opt sb-wechat" id="sb-wechat" title="弹出微信收款码">微信<sup class="sb-rec">荐</sup></button>
+  <a class="sb-opt sb-mbd" href="https://mbd.pub/o/bread/mbd-YZWblJ9paA==" target="_blank" rel="noopener" title="跳转到面包多支持页">面包多</a>
+</div>
+
+<header class="site">
+  <div class="site-inner">
+    <div class="brand">Kumitaku<span class="dot">·</span><span class="sub">JLPT N1 文法特訓</span></div>
+    <nav class="tabs">
+      <a href="#home" data-page="home">概览</a>
+      <a href="#tech" data-page="tech">解题技巧</a>
+      <a href="#practice" data-page="practice">专项训练</a>
+      <a href="#review" data-page="review">错题本</a>
+      <a href="#bank" data-page="bank">真题·题库</a>
+      <button type="button" class="theme-btn" id="theme-toggle" aria-label="切换深色模式" title="切换深色 / 浅色">🌙</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= 概览 ================= -->
+  <section class="page" id="page-home">
+    <div class="hero">
+      <span class="sticker">文法の型、ここにあり！</span>
+      <span class="sticker sticker-2">毎日10問、コツコツ固まる</span>
+      <p class="eyebrow">文法２１問を固めれば、言語知識は盤石</p>
+      <h1>JLPT N1 <em>文法</em> 特訓</h1>
+      <p class="lead">按官方三大题型（問題7〜9）整理快速解题技巧，配「计时训练 → 逐项解析 → 错题重练」的闭环。N1 文法的难点不在量，而在近义文型的辨析——本站用「接续 · 呼应 · 语气」三条线索拆解每一组形近义近的文型。内置一套按官方出题目标编写的原创模拟题库（明确标注非真题），也支持导入你自己的题库；练习数据只保存在你的浏览器里。</p>
+      <div class="facts">
+        <div class="fact"><div class="num">110<small> 分</small></div><div class="lbl">言語知識・読解 <span class="keep">考试总时长</span></div></div>
+        <div class="fact"><div class="num">60<small> 点</small></div><div class="lbl">言語知識 满分<span class="keep">（文字·語彙·文法合计）</span></div></div>
+        <div class="fact"><div class="num">19<small> 点</small></div><div class="lbl">基准点<span class="keep">（低于即不合格）</span></div></div>
+        <div class="fact"><div class="num"><span data-bank-stat="sets">26</span><small> 组题</small></div><div class="lbl">原创模拟题 · <span data-bank-stat="q">132</span>&nbsp;问 · 三大题型全覆盖</div></div>
+      </div>
+      <a class="btn" href="#practice">开始专项训练 →</a>
+      <a class="btn ghost" href="#tech" style="margin-left:10px">先学解题技巧</a>
+    </div>
+
+    <h2 class="page-title" style="margin-top:34px">官方出题构成（N1 文法）</h2>
+    <p class="page-desc">下表依据日本国際交流基金会官方网站公布的「大題的测试目标」整理；题数为近年公开真题的标准构成，每年可能微调，以当次考试为准。</p>
+    <div class="card" style="overflow-x:auto">
+      <table class="tbl">
+        <tr><th>大題</th><th>形式</th><th>官方测试目标</th><th>近年标准题数</th><th>建议用时</th></tr>
+        <tr><td>問題7</td><td><span class="jp">文の文法1（文法形式の判断）</span></td><td>是否能判断语法形式符合句子的内容与结构</td><td>10 問</td><td>每問 ≤ 30 秒</td></tr>
+        <tr><td>問題8</td><td><span class="jp">文の文法2（文の組み立て·統整文）</span></td><td>是否能组出结构正确、通顺连贯的句子</td><td>6 問</td><td>每問 ≤ 40 秒</td></tr>
+        <tr><td>問題9</td><td><span class="jp">文の文法3（文章の文法）</span></td><td>是否能判断句子在文章中通顺连贯、合乎文意</td><td>5 問</td><td>每問 ≤ 50 秒</td></tr>
+      </table>
+    </div>
+
+    <h2 class="page-title" style="margin-top:30px">得分规则与策略意义</h2>
+    <div class="grid cols-3">
+      <div class="card"><h3>三区分各 60 分</h3><p>总分 180＝言語知識（文字·語彙·文法）＋読解＋聴解，各 60 分。文法与文字·語彙共用「言語知識」区分——文法的每一题都直接计入这 60 分。</p></div>
+      <div class="card"><h3>基准点 19 分</h3><p>N1 合格需要「总分 ≥ 100」且「三个区分各 ≥ 19」。任何一个区分低于 19 直接不合格——文法题目模式固定、训练见效快，是言語知識区分里最值得保底的得分点。</p></div>
+      <div class="card"><h3>21 問的高性价比</h3><p>問題7〜9 共 21 問，题干短、考点集中。近义文型的「题感」一旦建立，正确率的提升会直接、稳定地反映在分数上——这是 N1 里最可复制的提分模块。</p></div>
+    </div>
+
+    <h2 class="page-title" style="margin-top:30px">我的进度</h2>
+    <div id="home-stats"></div>
+  </section>
+
+  <!-- ================= 解题技巧 ================= -->
+  <section class="page" id="page-tech">
+    <p class="eyebrow"> Techniques</p>
+    <h1 class="page-title">快速解题技巧</h1>
+    <p class="page-desc">方法论参考主流备考体系（『新完全マスター文法』『日本語総合攻略』等）通行的训练思路，并结合官方出题目标整理；配原创例题反复套用，形成肌肉记忆。</p>
+
+    <h2 style="font-size:20px;margin:18px 0 12px">一、通用心法</h2>
+    <div class="grid cols-3">
+      <div class="card"><h3>① 接续先排除</h3><p>N1 文型的信息八成在<b>接续</b>。选项回来先查：前接动词（辞书形／た形／ない形）？名词？名词＋の？例：「〜あげく」只接た形、「〜にあたって」接名词或动词辞书形——四个选项常能靠接续先杀两个。</p></div>
+      <div class="card"><h3>② 呼应词锁定</h3><p>句中若已有「もし」「まるで」「あまり」「決して」「必ずしも」，空格处文型必须与其呼应（もし〜としても／まるで〜かのようだ／あまり〜ない）。做题先圈呼应词，再选文型。</p></div>
+      <div class="card"><h3>③ 近义比「语气」</h3><p>形近义近的文型靠<b>语气与书面度</b>区分：「〜ざるを得ない」（被迫·书面）≠「〜ないではいられない」（情不自禁·主观感情）≠「〜を余儀なくされる」（外部强制·状况变化）。把每组近义文型的使用场景背成一句话。</p></div>
+      <div class="card"><h3>④ 文末定生死</h3><p>选项落在文末时，先判断全句语气——反问（〜ものか）、消极推量（〜まい）、感叹（〜ものだ）、强断定（〜にほかならない）。文型选得再像，语气不合即错。</p></div>
+      <div class="card"><h3>⑤ 組み立て抓谓语</h3><p>問題8 先找谓语，按「主语 → 对象（を／に）→ 修饰」固定骨干；★所在空的前后助词决定该空只能填什么成分。组装后<b>通读一遍</b>——「读不通」即组装错误。</p></div>
+      <div class="card"><h3>⑥ 文章の文法读前后</h3><p>問題9 的空格句「承上启下」：读空格<b>前一句</b>（话题／让步／原因）和<b>后一句</b>（展开／结论），逻辑方向接得上才选——尤其警惕逆接与因果的方向。</p></div>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 12px">二、高频文型速查（近义分组）</h2>
+    <div class="grid cols-3">
+      <div class="card">
+        <h3>让步 · 逆接 · 対比</h3>
+        <div class="chips">
+          <span class="chip"><b>〜つつも</b><span class="zh">虽然…却（する→しつつ）·书面</span></span>
+          <span class="chip"><b>〜ながらも</b><span class="zh">虽然…但是（ます形＋ながらも）</span></span>
+          <span class="chip"><b>〜ものの</b><span class="zh">虽然…但是（た形／な＋ものの）</span></span>
+          <span class="chip"><b>〜とはいうものの</b><span class="zh">话虽如此（承接前句）</span></span>
+          <span class="chip"><b>〜に(は)及ばない</b><span class="zh">比不上／无需（名词＋には及ばない）</span></span>
+          <span class="chip"><b>〜にひきかえ</b><span class="zh">与…正相反（对照·落差）</span></span>
+          <span class="chip"><b>〜反面</b><span class="zh">另一方面（同一事物的两面）</span></span>
+          <span class="chip"><b>〜かたわら</b><span class="zh">一边…一边（身份·并立）</span></span>
+          <span class="chip"><b>〜(よ)うが〜(よ)うまい</b><span class="zh">无论…都（意志形重叠）</span></span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>義務 · 被迫 · 感情</h3>
+        <div class="chips">
+          <span class="chip"><b>〜ざるを得ない</b><span class="zh">不得不（せざるを得ない）·书面</span></span>
+          <span class="chip"><b>〜ないわけにはいかない</b><span class="zh">不能不（道义义务）</span></span>
+          <span class="chip"><b>〜ずにはいられない</b><span class="zh">禁不住（感情自发）</span></span>
+          <span class="chip"><b>〜ないではいられない</b><span class="zh">同上·口语（〜ずには／ないでは）</span></span>
+          <span class="chip"><b>〜を禁じ得ない</b><span class="zh">不禁（涙を禁じ得ない）</span></span>
+          <span class="chip"><b>〜の極み</b><span class="zh">…之极（感激の極み）</span></span>
+          <span class="chip"><b>〜に堪えない</b><span class="zh">不堪（悲しみに堪えない）</span></span>
+          <span class="chip"><b>〜てやまない</b><span class="zh">…不已（祈ってやまない）</span></span>
+          <span class="chip"><b>〜極まりない</b><span class="zh">极其…（失礼極まりない）</span></span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>基準 · 契機 · 限定</h3>
+        <div class="chips">
+          <span class="chip"><b>〜に沿って</b><span class="zh">遵照（方针に沿って）</span></span>
+          <span class="chip"><b>〜に基づいて</b><span class="zh">基于（事実に基づく）</span></span>
+          <span class="chip"><b>〜をもとに</b><span class="zh">以…为素材（経験をもとに）</span></span>
+          <span class="chip"><b>〜に応じて</b><span class="zh">根据…相应变化（売れ行きに応じて）</span></span>
+          <span class="chip"><b>〜をきっかけに</b><span class="zh">以…为契机</span></span>
+          <span class="chip"><b>〜を契機に</b><span class="zh">以…为契机·书面</span></span>
+          <span class="chip"><b>〜にあたって</b><span class="zh">值此…之际（行动前）</span></span>
+          <span class="chip"><b>〜に際して</b><span class="zh">当…之际·书面</span></span>
+          <span class="chip"><b>〜ならでは</b><span class="zh">独有的（ここならでは）</span></span>
+          <span class="chip"><b>〜をおいて</b><span class="zh">除了…别无（君をおいて）</span></span>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 12px">三、干扰选项的七种面孔（消去法 checklist）</h2>
+    <div class="card" style="overflow-x:auto">
+      <table class="tbl">
+        <tr><th>陷阱类型</th><th>特征</th><th>对策</th></tr>
+        <tr><td>接续不合</td><td>文型要求的接续（た形／辞书形／ない形／名词＋の）与空格前形态不符</td><td>默背接续先杀两个：如「〜あげく」只接た形</td></tr>
+        <tr><td>近义混同</td><td>意思相近但语气、书面度、方向不同（被迫 ≠ 情不自禁）</td><td>每组近义文型背一句「使用场景」（见技巧③）</td></tr>
+        <tr><td>呼应冲突</td><td>句中呼应词（もし／まるで／あまり／決して）与所选文型不搭</td><td>先圈呼应词再选文型</td></tr>
+        <tr><td>时态肯否错位</td><td>文型对时态／肯否有硬性要求（〜たとたん必须过去、〜ないことには后接否定）</td><td>选项代入后检查全句时态与肯否是否通顺</td></tr>
+        <tr><td>文体不合</td><td>口语文型（〜っけ／〜って）混进书面语试题句</td><td>N1 试题句多为书面语，优先书面文型</td></tr>
+        <tr><td>语序违反（問題8）</td><td>★空填入后助词与成分接不上，整句组装不通</td><td>先固定谓语，看★前后助词归属，排除接不上的选项</td></tr>
+        <tr><td>文脉断裂（問題9）</td><td>空格句与前后句逻辑方向矛盾（让步反了、因果倒置）</td><td>只读空格前后两句，验证逻辑方向再选</td></tr>
+      </table>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 12px">四、分题型打法（問題7〜9）</h2>
+    <div class="grid cols-2">
+      <div class="card typecard" data-label="接続勝負！">
+        <h3>問題7 文の文法1（形式判断）<span class="badge gray">10問 · 每問≤30秒</span></h3>
+        <ol class="flow">
+          <li>先看空格<b>前后词性</b>：前接词形态是第一淘汰线。</li>
+          <li>圈出呼应词（もし／まるで／あまり／決して），锁定文型方向。</li>
+          <li>剩下两个近义项，比<b>语气与书面度</b>：被迫、自发、状况强制各归各位。</li>
+          <li>实在拿不准：书面语试题句优先书面文型。</li>
+        </ol>
+        <p class="kv"><b>考点标签：</b>近义辨析 · 接续制约 · 呼应制约 · 敬語 · 文末表现</p>
+      </div>
+      <div class="card typecard" data-label="骨組みを組め！">
+        <h3>問題8 文の文法2（組み立て）<span class="badge gray">6問 · 每問≤40秒</span></h3>
+        <ol class="flow">
+          <li>先找<b>谓语</b>，确定句型骨架（〜そうだ？〜まい？）。</li>
+          <li>由助词固定成分：带 を／に／が 的名词节先归位。</li>
+          <li>★空看前后：助词与成分<b>接得上</b>的往往只剩一个。</li>
+          <li>组装后通读——读不通就重排，正确句读起来必然顺畅。</li>
+        </ol>
+        <p class="kv"><b>考点标签：</b>句序组合</p>
+      </div>
+      <div class="card typecard" data-label="文脈で選べ！">
+        <h3>問題9 文の文法3（文章の文法）<span class="badge gray">5問 · 每問≤50秒</span></h3>
+        <ol class="flow">
+          <li>选项是完整句子，先读空格<b>前一句</b>和<b>后一句</b>再作答。</li>
+          <li>判断空格承担的逻辑：举例？让步？因果？具体化？</li>
+          <li>指示词（これ／その）的指代对象必须在<b>前文</b>出现过。</li>
+          <li>两个都通时，选与后一句衔接更紧、信息重复更少的。</li>
+        </ol>
+        <p class="kv"><b>考点标签：</b>文脉衔接 · 接续词 · 指示照应</p>
+      </div>
+      <div class="card typecard" data-label="時間は読解へ！">
+        <h3>文法整体的时间观<span class="badge gray">21問 · ≤15分钟</span></h3>
+        <ol class="flow">
+          <li>文法是与語彙并列的「快战区」：目标 35 分钟内解决語彙＋文法全部。</li>
+          <li>問題8 的組み立て最容易恋战——超出 40 秒先标记跳过。</li>
+          <li>标记的题最后回来看「接续排除」结果，通常能二选一。</li>
+          <li>省下的每一分钟都让给読解（读解战略见姊妹站 <a href="https://mocas-12.github.io/jlpt-n1-Yomitaku/" target="_blank" rel="noopener">Yomitaku</a>）。</li>
+        </ol>
+        <p class="kv"><b>考点标签：</b>时间预算 · 消去法</p>
+      </div>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 12px">五、110 分钟时间预算（经验参考值）</h2>
+    <div class="card" style="overflow-x:auto">
+      <table class="tbl">
+        <tr><th>板块</th><th>预算</th><th>要点</th></tr>
+        <tr><td>文字·語彙（問題1〜6）</td><td>≤ 20 分钟</td><td>凭语感快答，犹豫超过 20 秒就标记跳过</td></tr>
+        <tr><td>問題7 形式判断</td><td>约 5 分钟</td><td>10 問一气呵成，接续排除法</td></tr>
+        <tr><td>問題8 組み立て</td><td>约 4 分钟</td><td>找谓语定骨架，不恋战</td></tr>
+        <tr><td>問題9 文章の文法</td><td>约 4 分钟</td><td>只读空格前后两句定逻辑</td></tr>
+        <tr><td>読解（問題10〜15）</td><td>约 70 分钟</td><td>読解的时间战略见姊妹站 Yomitaku</td></tr>
+        <tr><td>涂卡与机动</td><td>约 10 分钟</td><td>留白给超时标记的题</td></tr>
+      </table>
+      <p style="font-size:13px;color:var(--muted);margin-top:10px">※ 上表为备考体系常用的经验配分（非官方规定），按个人强弱调整；总原则＝語彙文法合计不恋战（35 分钟以内），把时间留给読解。</p>
+    </div>
+  </section>
+
+  <!-- ================= 专项训练 ================= -->
+  <section class="page" id="page-practice">
+    <p class="eyebrow">Practice</p>
+    <h1 class="page-title">专项训练</h1>
+    <p class="page-desc">选择一个题组开始：自动计时、逐选项解析、错题自动入本。题组来自内置原创模拟题库，以及你在<a href="#bank">真题·题库</a>页导入的题组；也可以随机混合抽题，或按官方大题构成一键组一套模拟卷。</p>
+
+    <div id="set-list">
+      <div class="mixbar">
+        <button class="btn" id="btn-mix10">🎲 随机混合 10 問</button>
+        <button class="btn ghost" id="btn-mock">📝 模拟卷（官方構成 · 全局计时）</button>
+      </div>
+      <div class="filterbar" id="filterbar"></div>
+      <div class="filterbar subbar2" id="filterbar2">
+        <input id="set-search" type="search" placeholder="搜标题关键词…" autocomplete="off">
+        <span id="label-chips"></span>
+      </div>
+      <div class="grid cols-2" id="set-cards"></div>
+    </div>
+
+    <div id="session-view" style="display:none">
+      <div class="session-head">
+        <button class="btn sm sub" id="btn-back-top">← 组列表</button>
+        <h2 id="session-head-title" style="margin:0;font-size:19px;font-family:var(--serif)"></h2>
+        <div class="timer" id="timer" style="display:none"></div>
+        <label class="tgl" style="margin-left:8px"><input type="checkbox" id="sig-toggle"> 信号词高亮</label>
+        <span class="reader-ctl">
+          <button class="btn sm ghost" id="fs-minus" type="button" aria-label="缩小字号">A－</button>
+          <button class="btn sm ghost" id="fs-plus" type="button" aria-label="放大字号">A＋</button>
+          <button class="btn sm ghost" id="lh-toggle" type="button" aria-label="切换行距">行距</button>
+        </span>
+        <div class="big" id="session-result" style="font-family:var(--serif);font-size:22px;font-weight:600"></div>
+      </div>
+      <div id="session-body"></div>
+      <div class="actions" id="session-actions"></div>
+    </div>
+  </section>
+
+  <!-- ================= 错题本 ================= -->
+  <section class="page" id="page-review">
+    <p class="eyebrow">Review</p>
+    <h1 class="page-title">错题本</h1>
+    <p class="page-desc">做错的题自动收录，按「明天 → 3 天后 → 7 天后」的节奏提醒复习，连续三轮答对才算消灭。</p>
+    <button class="btn" id="btn-review-due" style="display:none;margin-bottom:16px">复习到期错题</button>
+    <button class="btn sub" id="btn-wrong-session" style="display:none;margin-bottom:16px">全部重练（答对按间隔推进）</button>
+    <div class="filterbar" id="wrong-filterbar" style="display:none;margin-bottom:16px"></div>
+    <div id="review-body"></div>
+  </section>
+
+  <!-- ================= 真题·题库 ================= -->
+  <section class="page" id="page-bank">
+    <p class="eyebrow">Sources &amp; Bank</p>
+    <h1 class="page-title">题库说明与管理</h1>
+    <p class="page-desc">先说实话：JLPT 真题只有官方一家，市面口碑题库（新完全マスター等）也全是受版权保护的商业书籍——任何第三方网页都无权转载它们。所以本页的做法是：内置一套<b>明确标注"非真题"</b>、严格对照官方出题目标编写的原创模拟题；想用成熟教材，按下面的指南购书后个人转录导入即可。</p>
+
+    <h2 style="font-size:20px;margin:18px 0 12px">一、内置题库（原创模拟 · 非真题）</h2>
+    <div class="card">
+      <h3>这是什么、不是什么</h3>
+      <p>内置 <span data-bank-stat="sets">26</span> 组共 <span data-bank-stat="q">132</span> 问，覆盖問題7〜9 全部三大题型：形式判断按「让步·逆接」「義務·被迫」「敬語」等近义主题分组建组；組み立て与文章の文法采用与官方完全一致的出题形式。每道题附<b>逐选项解析</b>——干扰项标注【接续不合】【近义混同】等陷阱名，正解给出接续、呼应与语气的完整说明。</p>
+      <p>它<b>能</b>帮你：建立「接续 · 呼应 · 语气」三线排查的解题流程、近义文型的辨析手感、错题归因——即解题能力本身。<br>它<b>不能</b>替代：官方真题与成熟教材的打磨深度。题目标注「本站原创模拟（非真题）」，不会冒充真题误导你。</p>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 12px">二、口碑题库书指南（公认效果好 · 需自购）</h2>
+    <div class="card" style="overflow-x:auto">
+      <table class="tbl">
+        <tr><th>教材</th><th>出版</th><th>特点</th><th>适合</th></tr>
+        <tr><td>『新完全マスター文法 N1』</td><td>スリーエーネットワーク</td><td>按机能分类讲解文型＋近义辨析＋分项练习，N1 文法备考口碑第一</td><td>系统辨析（首选）</td></tr>
+        <tr><td>『どんなときどう使う 日本語表現文型500 N1』</td><td>アスク出版</td><td>500 文型按场景索引、配例句与近义对比，当「文型词典」用</td><td>查询·复习</td></tr>
+        <tr><td>『日本語能力試験 総まとめ N1文法』</td><td>アスク出版</td><td>每日两页的轻量节奏，例句丰富，适合长期积累</td><td>时间碎片化</td></tr>
+        <tr><td>『日本語能力試験公式問題集』（年度版）</td><td>JEES／国際交流基金</td><td>唯一由官方出版的真题集，含答案与解说；自购自用无版权问题</td><td>考前实战检验</td></tr>
+      </table>
+      <p style="font-size:13px;color:var(--muted);margin-top:10px">※ 日本书店或日本亚马逊等渠道有售。把手中教材的题目转录为 JSON 导入本页训练（计时、解析、错题本），属于个人使用范畴；本页不提供、也不应传播任何受版权保护题目的电子文本。</p>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 12px">三、官方资料参考（构成与得分机制的出处）</h2>
+    <div class="grid cols-2 src">
+      <div class="card">
+        <h3>考试制度与数据</h3>
+        <ul>
+          <li><a href="https://www.jlpt.jp/cn/guideline/testsections.html" target="_blank" rel="noopener">考试科目与试题构成（官方中文页）</a></li>
+          <li><a href="https://www.jlpt.jp/cn/guideline/pdf/n1_cn_revised.pdf" target="_blank" rel="noopener">N1 大题的测试目标（官方中文 PDF）</a></li>
+          <li><a href="https://www.jlpt.jp/guideline/results.html" target="_blank" rel="noopener">得点区分・合否判定（官方）</a>／<a href="https://www.jlpt.jp/topics/201008301282900981.html" target="_blank" rel="noopener">合格点・基准点公告</a></li>
+          <li><a href="https://www.jees.or.jp/jlpt/" target="_blank" rel="noopener">日本国際教育支援協会（JEES）JLPT 页</a></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>官方例题（自行下载自用）</h3>
+        <ul>
+          <li><a href="https://www.jlpt.jp/samples/sample2018/pdf/N1G.pdf" target="_blank" rel="noopener">N1 文法公式样题 PDF</a><span class="desc">含問題7〜9 例题</span></li>
+          <li><a href="https://www.jlpt.jp/samples/sample2018/pdf/N1V.pdf" target="_blank" rel="noopener">N1 語彙公式样题 PDF</a><span class="desc">文法快战前的語彙配套</span></li>
+          <li><a href="https://www.jlpt.jp/samples/sample2018/pdf/N1answer.pdf" target="_blank" rel="noopener">N1 公式样题正答表 PDF</a></li>
+          <li><a href="https://www.jlpt.jp/cn/samples/sampleindex.html" target="_blank" rel="noopener">全部科目样题索引（官方中文页）</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 12px">四、题库管理（导入 / 导出 / 移除）</h2>
+    <div class="card">
+      <h3>如何导入自己的题目（两种做法）</h3>
+      <p>想用官方样题或手头教材训练？本站不提供任何受版权保护的题目电子文本，但<b>自己转录、自己导入练习</b>完全支持（个人使用范畴）：</p>
+      <ol class="flow">
+        <li><b>AI 代转录（推荐）</b>：把题目原文和下方「AI 转录提示词」一起发给任意 AI（ChatGPT / Claude / 豆包等），即可生成格式合规的题库 JSON——文型、选项、正解、逐选项解析全部对应。核对正解后粘贴到下方「导入」即可；</li>
+        <li><b>手动改示例</b>：点下方「填入示例题组」，会填入一道可直接导入的完整示例题，把字段内容（含每题的 options / answer / explain，解析可整段删除）替换成你的题目即可；</li>
+        <li><b>导入开练</b>：报错会精确到第几组第几题；成功后回「专项训练」即见。录入后用「导出/下载」随时备份。</li>
+      </ol>
+      <details id="ai-prompt-details" style="margin-top:10px">
+        <summary style="cursor:pointer;font-weight:700">📋 AI 转录提示词（点开复制）</summary>
+        <div style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn sm sub" id="btn-copy-prompt">复制提示词</button>
+          <span style="font-size:12.5px;color:var(--muted)">粘贴给任意 AI，再附上你的题目原文即可；导入前请核对正解</span>
+        </div>
+        <pre id="ai-prompt-text" style="background:var(--pre-bg);border-radius:10px;padding:14px;font-size:12.5px;line-height:1.7;overflow-x:auto;white-space:pre-wrap;margin-top:8px">你是 JLPT N1 文法题库转录助手。我会给你题目原文（题目、选项、正确答案，可能带解析），请转换成可导入刷题网站的 JSON 数组。只输出 JSON 本身，不要任何解释、注释或代码块标记。
+
+字段要求：
+- id：题组唯一标识（小写英文+数字，如 "wb2018-q7-1"），同 id 重复导入会覆盖旧题组
+- typeKey：三选一——文法形式の判断 "bun1" / 文の組み立て "kumi" / 文章の文法 "sho"
+- title：题组标题，注明出处，如 "公式問題集 Vol.1 問題7"
+- source / sourceUrl：来源名称与链接（没有可省略）
+- minutes：建议用时（分钟）：bun1 一组 5 题约 4、kumi 一组 6 题约 4、sho 一篇约 4
+- passage：仅 sho 需要——文章正文原文，空栏用【一】【二】【三】【四】标记；bun1 / kumi 不要此字段
+- questions：每题包含：
+  · q：题面原文。bun1＝含 ＿＿ 空格的句子；kumi＝「＿＿・＿＿ ＊＿＿・＿＿」形式的句子骨架（＊标记目标空格）；sho＝「【一】に入れるのに最もよいものを、…」
+  · label：考点标签，从「近义辨析 / 接续制约 / 呼应制约 / 敬語 / 文末表现 / 句序组合 / 文脉衔接 / 接续词 / 指示照应」中选
+  · options：恰好 4 个选项，保持原文顺序
+  · answer：正确答案下标（0=①，1=②，2=③，3=④）。必须与我提供的正解一致，不得自行改判！
+  · explain：与 options 等长的 4 条解析。正解条目说明文型的接续、呼应与语气为何契合本句；干扰条目点明不合的具体原因并标注陷阱类型（【接续不合】【近义混同】【呼应冲突】【时态肯否错位】【文体不合】【语序违反】【文脉断裂】）。我提供了解析就依据它整理，没提供就由你根据文型知识写出
+
+生成后自查：JSON 可被解析；无注释、无尾逗号；每个题组 options 恰好 4 项；answer 为 0-3 的整数；explain 恰好 4 条且与选项一一对应；sho 题组的 passage 中【一】〜【四】与 questions 一一对应。
+
+我的题目原文如下：
+（把题目、设问、选项、正解粘贴在这里）</pre>
+      </details>
+    </div>
+    <div class="card">
+      <h3>当前题库：<span id="bank-count"></span></h3>
+      <div id="bank-list" style="margin-top:8px"></div>
+    </div>
+    <div class="card">
+      <h3>导入题组</h3>
+      <p style="font-size:13.5px;color:var(--muted)">支持粘贴 JSON 或选择 .json 文件；同 id 题组会被覆盖更新。字段校验失败会提示具体位置。</p>
+      <textarea id="bank-import-text" rows="8" style="width:100%;font-family:Consolas,monospace;font-size:13px;border:1px solid var(--border);border-radius:10px;padding:12px" placeholder='在此粘贴题库 JSON（数组），或点击「填入示例题组」'></textarea>
+      <p style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn" id="btn-import">导入</button>
+        <button class="btn sub" id="btn-example">填入示例题组</button>
+        <input type="file" id="bank-file" accept=".json,application/json" style="font-size:13px">
+      </p>
+      <p style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn sub" id="btn-export">导出当前题库到文本框</button>
+        <button class="btn sub" id="btn-download">下载题库 JSON</button>
+      </p>
+    </div>
+    <div class="card">
+      <h3>练习记录备份（正确率 · 历史 · 错题本）</h3>
+      <p style="font-size:13.5px;color:var(--muted)">换浏览器或清缓存前先导出；导入为<b>整体覆盖</b>（需确认），不影响已导入的题库。</p>
+      <textarea id="rec-text" rows="6" style="width:100%;font-family:Consolas,monospace;font-size:13px;border:1px solid var(--border);border-radius:10px;padding:12px;background:var(--paper);color:var(--ink)" placeholder="导出的练习记录会显示在这里；导入时也可粘贴 JSON 或选择文件"></textarea>
+      <p style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn sub" id="btn-rec-export">导出记录到文本框</button>
+        <button class="btn sub" id="btn-rec-download">下载记录 JSON</button>
+      </p>
+      <p style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <input type="file" id="rec-file" accept=".json,application/json" style="font-size:13px">
+        <button class="btn" id="btn-rec-import">导入记录（覆盖当前）</button>
+      </p>
+    </div>
+    <div class="card">
+      <h3>JSON 格式速览</h3>
+      <pre style="background:var(--pre-bg);border-radius:10px;padding:14px;font-size:12.5px;overflow-x:auto"><code>[
+  {
+    "id": "wb2018-q7-1",              // 唯一 ID，重复导入即更新
+    "typeKey": "bun1",                // bun1|kumi|sho
+    "title": "官方問題例 問題7",
+    "source": "公式問題例PDF（2018）", // 可选：显示为来源徽章
+    "sourceUrl": "https://www.jlpt.jp/samples/sample2018/pdf/N1G.pdf", // 可选
+    "minutes": 4,                     // 建议用时（分钟）
+    "questions": [                    // bun1：无 passage，句子在 q 里
+      { "q": "台風の接近に＿＿、出発を一日早めた。",
+        "label": "近义辨析",
+        "options": ["にあたって", "にひきかえ", "に即して", "に限って"],
+        "answer": 0,                  // 正解下标 0〜3
+        "explain": ["正解。…", "【接续不合】…", "【近义混同】…", "【呼应冲突】…"] }
+    ]
+  },
+  { "id": "wb2018-q8-1", "typeKey": "kumi", "title": "…", "minutes": 4,
+    "questions": [
+      { "q": "田中さんは　＿＿・＿＿　＊＿＿・＿＿　帰国したそうだ。", // ＊＝目标空格
+        "label": "句序组合",
+        "options": ["三年ぶりに", "海外勤務を", "終えて", "ようやく"],
+        "answer": 0, "explain": ["…", "…", "…", "…"] } ] },
+  { "id": "wb2018-q9-1", "typeKey": "sho", "title": "…", "minutes": 4,
+    "passage": "文章正文……【一】……【二】……【三】……【四】……",
+    "questions": [
+      { "q": "【一】に入れるのに最もよいものを、①・②・③・④から一つ選びなさい。",
+        "label": "文脉衔接",
+        "options": ["完整选项句1", "完整选项句2", "完整选项句3", "完整选项句4"],
+        "answer": 2, "explain": ["…", "…", "…", "…"] } ] }
+]</code></pre>
+    </div>
+
+    <h2 style="font-size:20px;margin:26px 0 12px">五、本站内容出处说明</h2>
+    <div class="grid cols-2 src">
+      <div class="card">
+        <h3>系统教材（自购）</h3>
+        <ul>
+          <li>『日本語能力試験公式問題集』<span class="desc">官方真题集，含答案与解说，JEES 出版，书店有售</span></li>
+          <li>『新完全マスター文法 日本語能力試験N1』<span class="desc">スリーエーネットワーク，近义辨析训练的代表作</span></li>
+          <li>『どんなときどう使う 日本語表現文型500 N1』<span class="desc">アスク出版，按场景索引的文型词典</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>本站内容出处</h3>
+        <ul>
+          <li>出题构成・测试目标・题数<span class="desc">＝官方「大題的测试目标」PDF 与官网科目页</span></li>
+          <li>得分机制（60 分区分・19 基准点）<span class="desc">＝官方合否判定页与公告</span></li>
+          <li>解题方法论<span class="desc">＝主流备考体系通行训练思路的整理归纳（经验值非官方）</span></li>
+          <li>版权说明<span class="desc">＝本站不含任何试题原文；页面数据全部保存在本地浏览器</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap foot-wrap">
+    <button id="install-btn" class="btn ghost sm" type="button" hidden>添加到主屏幕</button>
+    <div class="foot-line">Kumitaku — 本页面为静态工具，不保存任何试题原文；练习记录仅存于本机浏览器。试题版权归 日本国際交流基金会／日本国際教育支援協会 所有。</div>
+  </div>
+  <div id="install-guide" class="install-guide" hidden>
+    <b>iPhone / iPad 添加到主屏幕（需用 Safari 打开本页）：</b>
+    <ol>
+      <li>点浏览器底部工具栏的「分享」（方框加向上箭头的图标）</li>
+      <li>在弹出的菜单里选「添加到主屏幕」</li>
+      <li>点右上角「添加」完成。以后从主屏幕图标打开即为全屏应用，离线也能用</li>
+    </ol>
+    <button id="install-guide-close" class="btn ghost sm" type="button">知道了</button>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<div id="qr-modal" class="qr-modal" hidden>
+  <div class="qr-card" role="dialog" aria-label="微信收款码">
+    <button class="qr-close" id="qr-close" type="button" aria-label="关闭">×</button>
+    <h3>❤️ 感谢支持！</h3>
+    <p class="qr-quote"><em>你的每一次投币，都点亮了一个写题的深夜；每一份支持，都是我认真收下的珍贵礼物。</em></p>
+    <img src="public/wechat-qr.jpg" alt="微信收款码（金额自定）">
+    <p class="qr-hint">手机端：长按保存图片 → 微信「扫一扫」→ 相册选择<br>桌面端：打开微信「扫一扫」对准即可</p>
+  </div>
+</div>
+
+<script defer src="js/bank/core.js?v=02c2b73a"></script>
+<script defer src="js/bank/bun1.js?v=25950f51"></script>
+<script defer src="js/bank/kumi.js?v=811ca181"></script>
+<script defer src="js/bank/sho.js?v=640795ac"></script>
+<script defer src="js/app.js?v=d8384735"></script>
+<script>
+/* PWA：注册 Service Worker（file:// 直接打开时自动跳过） */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === '127.0.0.1' || location.hostname === 'localhost')) {
+  addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(function () {});
+  });
+}
+</script>
+</body>
+</html>

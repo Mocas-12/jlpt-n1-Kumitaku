@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Kumitaku logo">
+  <!-- 和纸卡片底 -->
+  <rect x="3" y="3" width="114" height="114" rx="26" fill="#f4f8fa" stroke="#dfe6ea" stroke-width="2"/>
+  <!-- 藍色日轮 -->
+  <circle cx="60" cy="33" r="16" fill="#2c6e9e"/>
+  <text x="60" y="40" text-anchor="middle" font-family="'Noto Serif JP','Yu Mincho','Hiragino Mincho ProN','MS PMincho',serif" font-size="19" font-weight="700" fill="#ffffff">組</text>
+  <!-- 组装中的句块：两块已咬合，第三块虚线待装 -->
+  <rect x="20" y="52" width="30" height="21" rx="6" fill="#ffffff" stroke="#23272e" stroke-width="3"/>
+  <rect x="54" y="52" width="30" height="21" rx="6" fill="#ffffff" stroke="#23272e" stroke-width="3"/>
+  <rect x="88" y="52" width="16" height="21" rx="6" fill="#e1edf5" stroke="#23272e" stroke-width="3" stroke-dasharray="4 3"/>
+  <!-- 块内文字线 -->
+  <path d="M26 60 h18" stroke="#a8a294" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M26 66 h12" stroke="#a8a294" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M60 60 h18" stroke="#a8a294" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M60 66 h12" stroke="#a8a294" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- 装入箭头 -->
+  <path d="M52 84 C 64 92 78 92 90 86" stroke="#2c6e9e" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <path d="M90 86 l -7 -1.5 M90 86 l -3 6" stroke="#2c6e9e" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <!-- 藍色笔触 -->
+  <path d="M32 100 C 46 106 74 106 88 100" stroke="#2c6e9e" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+</svg>

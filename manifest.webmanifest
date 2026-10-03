@@ -1,0 +1,17 @@
+{
+  "name": "Kumitaku · JLPT N1 文法特訓",
+  "short_name": "Kumitaku",
+  "description": "按官方三大题型整理 JLPT N1 文法解题技巧：近义文型辨析、计时训练、逐选项解析、错题重练闭环；练习数据只保存在本地浏览器。",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f7f9",
+  "theme_color": "#16608c",
+  "icons": [
+    { "src": "public/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "public/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "public/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "public/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
