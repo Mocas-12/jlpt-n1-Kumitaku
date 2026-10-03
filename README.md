@@ -40,7 +40,7 @@
 
 - 🧭 **Organized by official question types**: mapped against the JLPT official《大題的測試目標》, it covers all three grammar sections — 問題7 文の文法1 (grammar-form judgement), 問題8 文の文法2 (sentence assembly / 統整文), 問題9 文の文法3 (discourse grammar)
 - ⚡ **Quick tactic library**: three-line elimination (接続 connection · 呼応 co-occurrence · 语气 register), a 28-pattern quick reference grouped by near-synonym families, a seven-category trap checklist, and a 110-minute time budget
-- 🗂 **Pattern library with recite mode (文法库)**: all 165 N1 grammar patterns — the full inventory commonly accepted by mainstream prep systems — each with its connection rule, meaning, an original example sentence with translation, near-synonym notes, and a high-frequency flag (73 exam hot list); **recite mode** hides the meaning until you click, marks patterns as mastered with localStorage progress, offers random pick-drilling, and links every pattern to its same-family drill set
+- 🗂 **Pattern library with recite mode (文法库)**: 268 entries covering the full N1 surface — N1 patterns, literary relics (〜まじき・〜べからず), and the compound particles / N2-carryover forms that keep reappearing in 問題7 options — each with its connection rule, meaning, an original example sentence with translation, near-synonym notes, and a high-frequency flag (91 exam hot list); **recite mode** hides the meaning until you click, marks patterns as mastered with localStorage progress, offers random pick-drilling, and links every pattern to its same-family drill set
 - ⏱️ **Timed practice**: each set carries a per-question time budget with a real-time timer; overtime is flagged in red, reproducing exam pacing
 - 🔍 **Per-option explanations**: every distractor is labelled with its trap type (接続不合 / 近義混同 / 呼応衝突 / 時態錯位 / 文体不合 / 語序違反 / 文脈断裂) and the key explains the pattern's connection, co-occurrence and register — not just an answer key
 - 🔁 **Mistake-notebook loop**: wrong answers are collected automatically; correct answers push items down the 1→3→7-day spaced-repetition schedule until they graduate; a weak-point profile links straight into targeted drills
@@ -98,7 +98,7 @@ JLPT past papers are copyrighted by Japan Foundation / JEES and commercial prep 
 ├── index.html               # single-page app (5 hash-routed sections)
 ├── css/style.css            # indigo manga-washi theme (light/dark)
 ├── js/app.js                # all interaction logic (no framework, file:// friendly)
-├── js/bunkei.js             # pattern library data (165 patterns, high-freq flags)
+├── js/bunkei.js             # pattern library data (268 patterns, 13 categories)
 ├── js/bank/                 # built-in question bank shards (pure data)
 │   ├── core.js              #   shared header + window.BANK
 │   ├── bun1.js              #   問題7 形式判断 ×12 sets / 60 items

@@ -96,7 +96,7 @@ const maxShare = Math.max(...ansDist) / totalQ;
 if (maxShare > 0.35) errors.push(`正解分布失衡：${ansDist.join('/')}（单选项占比 ${(maxShare * 100).toFixed(1)}%，上限 35%）`);
 
 /* ---- 文法库（js/bunkei.js）校验 ---- */
-const BN_CATS = ['joshuku', 'gimu', 'henka', 'kijun', 'keiki', 'gentei', 'inka', 'jouken', 'kyouchou', 'taiguu', 'bunmyaku'];
+const BN_CATS = ['joshuku', 'gimu', 'henka', 'kijun', 'fukugou', 'keiki', 'gentei', 'inka', 'jouken', 'kyouchou', 'bungo', 'taiguu', 'bunmyaku'];
 const bnSrc = 'var window = globalThis;\n' + readFileSync(new URL('../js/bunkei.js', import.meta.url), 'utf8');
 const bctx = vm.createContext({});
 vm.runInContext(bnSrc, bctx);

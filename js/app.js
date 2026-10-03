@@ -470,9 +470,11 @@
   var BN_CATS = [
     { key: 'joshuku', name: '让步・逆接・対比' }, { key: 'gimu', name: '義務・被迫・感情' },
     { key: 'henka', name: '変化・程度・様態' }, { key: 'kijun', name: '基準・経由・対応' },
+    { key: 'fukugou', name: '複合助詞・助詞' },
     { key: 'keiki', name: '契機・時点・時間' }, { key: 'gentei', name: '限定・範囲・添加' },
     { key: 'inka', name: '原因・理由' }, { key: 'jouken', name: '条件・仮定' },
-    { key: 'kyouchou', name: '強調・断定・文末' }, { key: 'taiguu', name: '敬語・待遇' },
+    { key: 'kyouchou', name: '強調・断定・文末' }, { key: 'bungo', name: '文語・残存表現' },
+    { key: 'taiguu', name: '敬語・待遇' },
     { key: 'bunmyaku', name: '接続詞・文脈（問題9）' }
   ];
   var bnCat = 'all', bnFreq = 'all', bnQuery = '', bnRecite = false, bnHide = false;
