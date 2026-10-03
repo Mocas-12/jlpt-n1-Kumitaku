@@ -119,7 +119,10 @@ for (const e of BUNKEI) {
   if (e.freq !== 0 && e.freq !== 1) errors.push(`文法 ${at}: freq 应为 0/1（实际 ${e.freq}）`);
   else if (e.freq) bnHigh++;
   if (e.drill && !bankIds.has(e.drill)) errors.push(`文法 ${at}: drill 指向不存在的题组 ${e.drill}`);
+  if (e.kj !== undefined && e.kj !== 0 && e.kj !== 1) errors.push(`文法 ${at}: kj 应为 0/1`);
 }
+const kjN = BUNKEI.filter((e) => e.kj).length;
+console.log(`出題基準収録 ${kjN} 条`);
 console.log(`文法库 ${BUNKEI.length} 条（高频 ${bnHigh}）`);
 
 console.log(`组数 ${BANK.length} · 问数 ${totalQ} · 正解 ${ansDist.join('/')}`);

@@ -496,6 +496,7 @@
     return '<div class="card bncard' + (mastered ? ' mastered' : '') + (revealed ? ' revealed' : '') + '" data-id="' + esc(e.id) + '">' +
       '<div class="bn-head"><span class="bn-p">' + esc(e.p) + '</span>' +
       (e.freq ? '<span class="badge red">高频</span>' : '<span class="badge gray">常考</span>') +
+      (e.kj ? '<span class="badge" title="收录于旧《日本語能力試験出題基準》1級文法リスト（官方大纲）">出題基準</span>' : '') +
       '<span class="badge gray">' + esc(cat) + '</span>' +
       (mastered ? '<span class="bn-mk" title="已掌握">✓</span>' : '') + '</div>' +
       '<p class="bn-conn"><b>接続</b>' + esc(e.conn) + '</p>' +
