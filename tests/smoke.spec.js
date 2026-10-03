@@ -349,7 +349,7 @@ test('安全：sourceUrl 仅允许 http(s)，渲染侧兜底旧数据', async ({
   await expect(badge).toHaveAttribute('href', '#bank');
 });
 
-test('文型库：全量渲染、搜索与高频筛选', async ({ page }) => {
+test('文法库：全量渲染、搜索与高频筛选', async ({ page }) => {
   await page.goto('/#bunkei');
   await expect(page.locator('#bn-total')).toHaveText(String(BUNKEI_N));
   await expect(page.locator('#bunkei-list .bncard')).toHaveCount(BUNKEI_N);
@@ -360,7 +360,7 @@ test('文型库：全量渲染、搜索与高频筛选', async ({ page }) => {
   await expect(page.locator('#bunkei-list .bncard')).toHaveCount(BUNKEI_HIGH);
   await page.click('#bn-freq .fbtn[data-f="all"]');
 
-  // 搜索：文型/接续/例文命中
+  // 搜索：文法/接续/例文命中
   await page.fill('#bn-search', 'ざるを得ない');
   await expect(page.locator('#bunkei-list .bncard')).toHaveCount(1);
   await expect(page.locator('#bunkei-list .bn-p').first()).toContainText('ざるを得ない');
@@ -376,7 +376,7 @@ test('文型库：全量渲染、搜索与高频筛选', async ({ page }) => {
   }
 });
 
-test('文型库：背诵模式揭示 → 掌握进度持久化 → 只看未掌握', async ({ page }) => {
+test('文法库：背诵模式揭示 → 掌握进度持久化 → 只看未掌握', async ({ page }) => {
   await page.goto('/#bunkei');
   await page.click('#bn-recite');
   await expect(page.locator('#bn-recite')).toContainText('背诵模式：开');
@@ -406,7 +406,7 @@ test('文型库：背诵模式揭示 → 掌握进度持久化 → 只看未掌�
   }
 });
 
-test('文型库：同族题组链接直达专项训练', async ({ page }) => {
+test('文法库：同族题组链接直达专项训练', async ({ page }) => {
   await page.goto('/#bunkei');
   await page.fill('#bn-search', 'ざるを得ない');
   await page.locator('#bunkei-list [data-drill]').first().click();

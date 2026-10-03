@@ -8,7 +8,7 @@
   var LS_THEME = 'kt_theme';             // 深色模式偏好（缺省跟随系统）
   var LS_DRAFT = 'kt_session_draft_v1';  // 未提交会话草稿（刷新/意外关闭后恢复进度）
   var LS_GROUP = 'kt_group_open_v1';     // 题组列表按题型折叠分组的展开状态（训练页/题库页共用）
-  var LS_BUNKEI = 'kt_bunkei_v1';        // 文型库的掌握标记 { m: { id: 1 } }
+  var LS_BUNKEI = 'kt_bunkei_v1';        // 文法库的掌握标记 { m: { id: 1 } }
   var SIG_WORDS = ['にもかかわらず', 'とはいえ', 'これに対して', '言い換えれば', 'したがって', 'けれども', 'しかし', 'なぜなら', 'ところが', 'それでも', 'もっとも', 'たしかに', 'もちろん', 'すなわち', 'そのため', 'それゆえ', '要するに', 'つまり', '確かに', 'たしか', '一方', 'だが', 'ただし'];
   var SIG_RE = new RegExp('(' + SIG_WORDS.join('|') + ')', 'g');
   var LABELS = ['①', '②', '③', '④'];
@@ -444,7 +444,7 @@
         traps.map(function (t) { return '<a href="#practice" data-trap="' + esc(t[0]) + '">【' + esc(t[0]) + '】×' + t[1] + '</a>'; }).join('　') +
         '<span style="color:var(--muted);font-size:12.5px">（点标签直达定向训练）</span></p>' : '') +
       '<p style="margin-top:12px;font-size:13.5px;color:var(--muted)">当前题库：' + bankN + ' 组题（<a href="#bank">真题·题库</a>导入/管理）</p>' +
-      (bnT ? '<p style="margin-top:8px;font-size:13.5px;color:var(--muted)">文型库：已掌握 <b style="color:var(--ink)">' + bnM + ' / ' + bnT + '</b> 条（<a href="#bunkei">去背诵 →</a>）</p>' : '') +
+      (bnT ? '<p style="margin-top:8px;font-size:13.5px;color:var(--muted)">文法库：已掌握 <b style="color:var(--ink)">' + bnM + ' / ' + bnT + '</b> 条（<a href="#bunkei">去背诵 →</a>）</p>' : '') +
       '</div></div>';
       '<div class="card"><h3>最近练习</h3>' +
       (streak ? '<p class="streakline">🔥 连续打卡 <b>' + streak + '</b> 天</p>' : '') +
@@ -463,7 +463,7 @@
   }
 
   /* =========================================================
-     bunkei（文型库：浏览 + 背诵）
+     bunkei（文法库：浏览 + 背诵）
      数据来源：js/bunkei.js 的 window.BUNKEI；
      掌握标记存 localStorage（LS_BUNKEI），揭示状态只存会话内存
      ========================================================= */
@@ -551,7 +551,7 @@
     });
     var box = document.getElementById('bunkei-list');
     if (!list.length) {
-      box.innerHTML = '<div class="empty">没有匹配的文型。换个关键词，或清除筛选再试试。</div>';
+      box.innerHTML = '<div class="empty">没有匹配的文法。换个关键词，或清除筛选再试试。</div>';
       return;
     }
     var html = '';
@@ -739,7 +739,7 @@
       answers: {}, qtimes: {}, submitted: false, startTs: Date.now(),
       budgetSec: (s.minutes || 3) * 60
     };
-    /* 会话渲染在训练页容器里：若从其他页发起（如文型库的同族题链接），需切到 #practice 才可见 */
+    /* 会话渲染在训练页容器里：若从其他页发起（如文法库的同族题链接），需切到 #practice 才可见 */
     if (location.hash !== '#practice') {
       location.hash = '#practice'; // hashchange → route() 渲染
     } else {
@@ -1533,7 +1533,7 @@
       curWrongLabel = b.getAttribute('data-wl');
       renderReview();
     });
-    // 文型库：分类/频度筛选、搜索、背诵模式、随机抽背、掌握标记与同族题跳转
+    // 文法库：分类/频度筛选、搜索、背诵模式、随机抽背、掌握标记与同族题跳转
     document.getElementById('bn-cats').addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('[data-c]') : null;
       if (!b) return;
@@ -1569,7 +1569,7 @@
         if (bnFreq === 'norm' && e.freq) return false;
         return true;
       });
-      if (!pool.length) { toast('当前筛选下没有未掌握的文型了', true); return; }
+      if (!pool.length) { toast('当前筛选下没有未掌握的文法了', true); return; }
       var pick = pool[Math.floor(Math.random() * pool.length)];
       bnReveal = {};
       bnReveal[pick.id] = true;

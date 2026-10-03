@@ -82,7 +82,7 @@ async function newPage(theme) {
   console.log('[shots] docs/shot-mock.png');
 }
 
-/* 6. 文型库（背诵模式：揭示一张卡片） */
+/* 6. 文法库（背诵模式：揭示一张卡片） */
 {
   const page = await newPage('light');
   await page.click('nav.tabs a[data-page="bunkei"]');

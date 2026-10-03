@@ -95,7 +95,7 @@ for (const s of BANK) {
 const maxShare = Math.max(...ansDist) / totalQ;
 if (maxShare > 0.35) errors.push(`正解分布失衡：${ansDist.join('/')}（单选项占比 ${(maxShare * 100).toFixed(1)}%，上限 35%）`);
 
-/* ---- 文型库（js/bunkei.js）校验 ---- */
+/* ---- 文法库（js/bunkei.js）校验 ---- */
 const BN_CATS = ['joshuku', 'gimu', 'henka', 'kijun', 'keiki', 'gentei', 'inka', 'jouken', 'kyouchou', 'taiguu', 'bunmyaku'];
 const bnSrc = 'var window = globalThis;\n' + readFileSync(new URL('../js/bunkei.js', import.meta.url), 'utf8');
 const bctx = vm.createContext({});
@@ -107,20 +107,20 @@ const seenBnId = new Set(), seenBnP = new Set();
 let bnHigh = 0;
 for (const e of BUNKEI) {
   const at = e.id || `(第 ${BUNKEI.indexOf(e) + 1} 条)`;
-  if (!e.id || typeof e.id !== 'string') errors.push(`文型 ${at}: 缺 id`);
-  if (seenBnId.has(e.id)) errors.push(`文型 重复 id: ${e.id}`);
+  if (!e.id || typeof e.id !== 'string') errors.push(`文法 ${at}: 缺 id`);
+  if (seenBnId.has(e.id)) errors.push(`文法 重复 id: ${e.id}`);
   seenBnId.add(e.id);
   for (const f of ['p', 'cat', 'conn', 'mean', 'ex', 'exzh']) {
-    if (!e[f] || typeof e[f] !== 'string') errors.push(`文型 ${at}: 缺 ${f}`);
+    if (!e[f] || typeof e[f] !== 'string') errors.push(`文法 ${at}: 缺 ${f}`);
   }
-  if (e.p && seenBnP.has(e.p)) errors.push(`文型 重复文型: ${e.p}`);
+  if (e.p && seenBnP.has(e.p)) errors.push(`文法 重复文法: ${e.p}`);
   seenBnP.add(e.p);
-  if (!BN_CATS.includes(e.cat)) errors.push(`文型 ${at}: 非法分类 ${e.cat}`);
-  if (e.freq !== 0 && e.freq !== 1) errors.push(`文型 ${at}: freq 应为 0/1（实际 ${e.freq}）`);
+  if (!BN_CATS.includes(e.cat)) errors.push(`文法 ${at}: 非法分类 ${e.cat}`);
+  if (e.freq !== 0 && e.freq !== 1) errors.push(`文法 ${at}: freq 应为 0/1（实际 ${e.freq}）`);
   else if (e.freq) bnHigh++;
-  if (e.drill && !bankIds.has(e.drill)) errors.push(`文型 ${at}: drill 指向不存在的题组 ${e.drill}`);
+  if (e.drill && !bankIds.has(e.drill)) errors.push(`文法 ${at}: drill 指向不存在的题组 ${e.drill}`);
 }
-console.log(`文型库 ${BUNKEI.length} 条（高频 ${bnHigh}）`);
+console.log(`文法库 ${BUNKEI.length} 条（高频 ${bnHigh}）`);
 
 console.log(`组数 ${BANK.length} · 问数 ${totalQ} · 正解 ${ansDist.join('/')}`);
 console.log('题型组数:', TYPE_KEYS.map((k) => `${TYPE_NAMES[k]} ${BANK.filter((s) => s.typeKey === k).length}`).join(' · '));
