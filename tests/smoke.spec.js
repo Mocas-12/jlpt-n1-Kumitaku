@@ -1,6 +1,6 @@
 /* 冒烟测试：守护核心链路与历史 bug（筛选丢行、未答完提交、导入校验、組み立て无原文渲染） */
 import { test, expect } from '@playwright/test';
-import { ALL_SETS, BUN1, SHO, FIRST_SET_ID } from './bank-meta.mjs';
+import { ALL_SETS, BUN1, SHO, FIRST_SET_ID, BUNKEI_N, BUNKEI_HIGH } from './bank-meta.mjs';
 
 // 「全部」视图的题组列表按题型折叠（默认收起）：点击卡片前先展开各组
 const openGroups = (page) => page.evaluate(() =>
@@ -347,6 +347,72 @@ test('安全：sourceUrl 仅允许 http(s)，渲染侧兜底旧数据', async ({
   await page.goto('/#practice');
   const badge = page.locator('#set-cards .setcard', { hasText: '旧数据坏链接' }).locator('a.badge').first();
   await expect(badge).toHaveAttribute('href', '#bank');
+});
+
+test('文型库：全量渲染、搜索与高频筛选', async ({ page }) => {
+  await page.goto('/#bunkei');
+  await expect(page.locator('#bn-total')).toHaveText(String(BUNKEI_N));
+  await expect(page.locator('#bunkei-list .bncard')).toHaveCount(BUNKEI_N);
+  await expect(page.locator('#bn-progress')).toContainText(`0 / ${BUNKEI_N}`);
+
+  // 高频筛选
+  await page.click('#bn-freq .fbtn[data-f="high"]');
+  await expect(page.locator('#bunkei-list .bncard')).toHaveCount(BUNKEI_HIGH);
+  await page.click('#bn-freq .fbtn[data-f="all"]');
+
+  // 搜索：文型/接续/例文命中
+  await page.fill('#bn-search', 'ざるを得ない');
+  await expect(page.locator('#bunkei-list .bncard')).toHaveCount(1);
+  await expect(page.locator('#bunkei-list .bn-p').first()).toContainText('ざるを得ない');
+  await page.fill('#bn-search', '');
+
+  // 分类筛选
+  await page.click('#bn-cats .fbtn[data-c="taiguu"]');
+  const taiguuCards = page.locator('#bunkei-list .bncard');
+  const n = await taiguuCards.count();
+  expect(n).toBeGreaterThan(0);
+  for (let i = 0; i < n; i++) {
+    await expect(taiguuCards.nth(i).locator('.badge').nth(1)).toContainText('敬語');
+  }
+});
+
+test('文型库：背诵模式揭示 → 掌握进度持久化 → 只看未掌握', async ({ page }) => {
+  await page.goto('/#bunkei');
+  await page.click('#bn-recite');
+  await expect(page.locator('#bn-recite')).toContainText('背诵模式：开');
+
+  // 背诵模式下释义隐藏，点击卡片揭示
+  const first = page.locator('#bunkei-list .bncard').first();
+  await expect(first.locator('.bn-body')).toBeHidden();
+  await expect(first.locator('.bn-hint')).toContainText('点击卡片显示释义');
+  await first.click();
+  await expect(first.locator('.bn-body')).toBeVisible();
+  await expect(first.locator('[data-mk]')).toBeVisible();
+
+  // 标记掌握 → localStorage 持久化 + 进度更新
+  await first.locator('[data-mk]').click();
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('kt_bunkei_v1')).m);
+  expect(Object.keys(stored).length).toBe(1);
+  await expect(page.locator('#bn-progress')).toContainText('1 / ');
+
+  // 刷新后仍在；开启「只看未掌握」则被过滤
+  await page.reload();
+  await expect(page.locator('#bn-progress')).toContainText('1 / ');
+  await page.check('#bn-hide');
+  const cards = page.locator('#bunkei-list .bncard');
+  await expect(cards).toHaveCount(BUNKEI_N - 1);
+  for (let i = 0; i < BUNKEI_N - 1; i++) {
+    await expect(cards.nth(i)).not.toHaveClass(/mastered/);
+  }
+});
+
+test('文型库：同族题组链接直达专项训练', async ({ page }) => {
+  await page.goto('/#bunkei');
+  await page.fill('#bn-search', 'ざるを得ない');
+  await page.locator('#bunkei-list [data-drill]').first().click();
+  // startSet 切到训练会话视图（hash 也切到 #practice）
+  await expect(page.locator('#session-view')).toBeVisible();
+  await expect(page.locator('#session-head-title')).toContainText('義務');
 });
 
 test('模拟卷：按官方構成组卷（形式判断10 + 組み立て + 文章の文法）', async ({ page }) => {

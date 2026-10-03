@@ -8,6 +8,7 @@
   var LS_THEME = 'kt_theme';             // 深色模式偏好（缺省跟随系统）
   var LS_DRAFT = 'kt_session_draft_v1';  // 未提交会话草稿（刷新/意外关闭后恢复进度）
   var LS_GROUP = 'kt_group_open_v1';     // 题组列表按题型折叠分组的展开状态（训练页/题库页共用）
+  var LS_BUNKEI = 'kt_bunkei_v1';        // 文型库的掌握标记 { m: { id: 1 } }
   var SIG_WORDS = ['にもかかわらず', 'とはいえ', 'これに対して', '言い換えれば', 'したがって', 'けれども', 'しかし', 'なぜなら', 'ところが', 'それでも', 'もっとも', 'たしかに', 'もちろん', 'すなわち', 'そのため', 'それゆえ', '要するに', 'つまり', '確かに', 'たしか', '一方', 'だが', 'ただし'];
   var SIG_RE = new RegExp('(' + SIG_WORDS.join('|') + ')', 'g');
   var LABELS = ['①', '②', '③', '④'];
@@ -379,7 +380,7 @@
   /* =========================================================
      routing
      ========================================================= */
-  var PAGES = ['home', 'tech', 'practice', 'review', 'bank'];
+  var PAGES = ['home', 'tech', 'bunkei', 'practice', 'review', 'bank'];
   function route() {
     var h = (location.hash || '#home').replace('#', '');
     if (PAGES.indexOf(h) < 0) h = 'home';
@@ -390,6 +391,7 @@
       if (tab) tab.classList.toggle('on', p === h);
     });
     if (h === 'home') renderHome();
+    if (h === 'bunkei') renderBunkei();
     if (h === 'practice') {
       if (session) { renderSession(); showSessionView(); if (!session.submitted) startTimer(); }
       else { renderSetList(); showSetList(); }
@@ -428,6 +430,10 @@
     var dueN = dueCount(d);
     var bankN = allSets().length;
     var streak = calcStreak(d);
+    var bnList = bunkeiAll();
+    var bnStoreM = bunkeiStore().m;
+    var bnM = bnList.filter(function (e) { return bnStoreM[e.id]; }).length;
+    var bnT = bnList.length;
     // 弱点画像：错题的考点标签 Top3（点击直达该考点的定向训练）
     var traps = Object.keys(d.traps || {}).map(function (l) { return [l, d.traps[l]]; })
       .sort(function (a, b) { return b[1] - a[1]; }).slice(0, 3);
@@ -437,7 +443,9 @@
       (traps.length ? '<p class="trapline" style="margin-top:12px"><b>常掉陷阱：</b>' +
         traps.map(function (t) { return '<a href="#practice" data-trap="' + esc(t[0]) + '">【' + esc(t[0]) + '】×' + t[1] + '</a>'; }).join('　') +
         '<span style="color:var(--muted);font-size:12.5px">（点标签直达定向训练）</span></p>' : '') +
-      '<p style="margin-top:12px;font-size:13.5px;color:var(--muted)">当前题库：' + bankN + ' 组题（<a href="#bank">真题·题库</a>导入/管理）</p></div>' +
+      '<p style="margin-top:12px;font-size:13.5px;color:var(--muted)">当前题库：' + bankN + ' 组题（<a href="#bank">真题·题库</a>导入/管理）</p>' +
+      (bnT ? '<p style="margin-top:8px;font-size:13.5px;color:var(--muted)">文型库：已掌握 <b style="color:var(--ink)">' + bnM + ' / ' + bnT + '</b> 条（<a href="#bunkei">去背诵 →</a>）</p>' : '') +
+      '</div></div>';
       '<div class="card"><h3>最近练习</h3>' +
       (streak ? '<p class="streakline">🔥 连续打卡 <b>' + streak + '</b> 天</p>' : '') +
       (dueN ? '<p class="dueline">📌 今日待复习错题 <b style="color:var(--accent)">' + dueN + '</b> 题 <button class="btn sm" id="btn-home-review">开始复习</button></p>' : '') +
@@ -452,6 +460,111 @@
         curFilter = 'all'; curQuery = '';
       }); // hash 跳转后 route → renderSetList 按状态渲染
     });
+  }
+
+  /* =========================================================
+     bunkei（文型库：浏览 + 背诵）
+     数据来源：js/bunkei.js 的 window.BUNKEI；
+     掌握标记存 localStorage（LS_BUNKEI），揭示状态只存会话内存
+     ========================================================= */
+  var BN_CATS = [
+    { key: 'joshuku', name: '让步・逆接・対比' }, { key: 'gimu', name: '義務・被迫・感情' },
+    { key: 'henka', name: '変化・程度・様態' }, { key: 'kijun', name: '基準・経由・対応' },
+    { key: 'keiki', name: '契機・時点・時間' }, { key: 'gentei', name: '限定・範囲・添加' },
+    { key: 'inka', name: '原因・理由' }, { key: 'jouken', name: '条件・仮定' },
+    { key: 'kyouchou', name: '強調・断定・文末' }, { key: 'taiguu', name: '敬語・待遇' },
+    { key: 'bunmyaku', name: '接続詞・文脈（問題9）' }
+  ];
+  var bnCat = 'all', bnFreq = 'all', bnQuery = '', bnRecite = false, bnHide = false;
+  var bnReveal = {};
+  function bunkeiAll() { return (typeof BUNKEI !== 'undefined' && BUNKEI) ? BUNKEI : []; }
+  function bunkeiStore() {
+    try { return JSON.parse(localStorage.getItem(LS_BUNKEI)) || { m: {} }; }
+    catch (e) { return { m: {} }; }
+  }
+  function bunkeiSave(s) {
+    try { localStorage.setItem(LS_BUNKEI, JSON.stringify(s)); }
+    catch (e) { toast('保存失败：浏览器本地存储不可用或已满', false); }
+  }
+
+  function bnCardHTML(e, m) {
+    var mastered = !!m[e.id];
+    var revealed = !!bnReveal[e.id];
+    var cat = (BN_CATS.filter(function (c) { return c.key === e.cat; })[0] || {}).name || e.cat;
+    return '<div class="card bncard' + (mastered ? ' mastered' : '') + (revealed ? ' revealed' : '') + '" data-id="' + esc(e.id) + '">' +
+      '<div class="bn-head"><span class="bn-p">' + esc(e.p) + '</span>' +
+      (e.freq ? '<span class="badge red">高频</span>' : '<span class="badge gray">常考</span>') +
+      '<span class="badge gray">' + esc(cat) + '</span>' +
+      (mastered ? '<span class="bn-mk" title="已掌握">✓</span>' : '') + '</div>' +
+      '<p class="bn-conn"><b>接続</b>' + esc(e.conn) + '</p>' +
+      '<div class="bn-body">' +
+        '<p><b>意思</b>' + esc(e.mean) + '</p>' +
+        '<p class="bn-ex">' + esc(e.ex) + '<span class="bn-zh">' + esc(e.exzh) + '</span></p>' +
+        (e.note ? '<p class="bn-note">' + esc(e.note) + '</p>' : '') +
+      '</div>' +
+      (bnRecite && !revealed ? '<p class="bn-hint">👆 点击卡片显示释义</p>' : '') +
+      (bnRecite && revealed ? '<div class="bn-acts"><button class="btn sm" data-mk="' + esc(e.id) + '">✓ 掌握了</button><button class="btn sm sub" data-um="' + esc(e.id) + '">↺ 没记住</button></div>' : '') +
+      (e.drill ? '<p class="bn-foot"><a class="bn-drill" data-drill="' + esc(e.drill) + '">✍ 同族题组 ' + esc(e.drill) + ' →</a></p>' : '') +
+      '</div>';
+  }
+
+  function renderBunkei() {
+    var all = bunkeiAll();
+    var totalEl = document.getElementById('bn-total');
+    if (totalEl) totalEl.textContent = all.length;
+    var m = bunkeiStore().m;
+    var masteredN = all.filter(function (e) { return m[e.id]; }).length;
+    var highAll = all.filter(function (e) { return e.freq; });
+    var highM = highAll.filter(function (e) { return m[e.id]; }).length;
+    var pct = all.length ? Math.round(masteredN / all.length * 100) : 0;
+    document.getElementById('bn-progress').innerHTML =
+      '<span>已掌握 <span class="bn-pct">' + masteredN + ' / ' + all.length + '</span> 条（高频 ' + highM + ' / ' + highAll.length + '）</span>' +
+      '<span class="pbar"><i style="width:' + pct + '%"></i></span><span class="bn-pct">' + pct + '%</span>';
+
+    var cats = '<button class="fbtn' + (bnCat === 'all' ? ' on' : '') + '" data-c="all">全部（' + all.length + '）</button>';
+    BN_CATS.forEach(function (c) {
+      var n = all.filter(function (e) { return e.cat === c.key; }).length;
+      if (!n) return;
+      cats += '<button class="fbtn' + (bnCat === c.key ? ' on' : '') + '" data-c="' + c.key + '">' + c.name + '（' + n + '）</button>';
+    });
+    document.getElementById('bn-cats').innerHTML = cats;
+    document.getElementById('bn-freq').innerHTML =
+      '<button class="fbtn' + (bnFreq === 'all' ? ' on' : '') + '" data-f="all">全部频度</button>' +
+      '<button class="fbtn' + (bnFreq === 'high' ? ' on' : '') + '" data-f="high">高频（' + highAll.length + '）</button>' +
+      '<button class="fbtn' + (bnFreq === 'norm' ? ' on' : '') + '" data-f="norm">常考（' + (all.length - highAll.length) + '）</button>';
+    var reciteBtn = document.getElementById('bn-recite');
+    reciteBtn.textContent = bnRecite ? '🗣 背诵模式：开' : '🗣 背诵模式：关';
+    reciteBtn.classList.toggle('ghost', !bnRecite);
+    var hideTgl = document.getElementById('bn-hide');
+    if (hideTgl.checked !== bnHide) hideTgl.checked = bnHide;
+    var searchEl = document.getElementById('bn-search');
+    if (searchEl.value.trim() !== bnQuery) searchEl.value = bnQuery;
+
+    var q = bnQuery.toLowerCase();
+    var list = all.filter(function (e) {
+      if (bnCat !== 'all' && e.cat !== bnCat) return false;
+      if (bnFreq === 'high' && !e.freq) return false;
+      if (bnFreq === 'norm' && e.freq) return false;
+      if (bnHide && m[e.id]) return false;
+      if (q && (e.p + e.conn + e.mean + e.ex).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    var box = document.getElementById('bunkei-list');
+    if (!list.length) {
+      box.innerHTML = '<div class="empty">没有匹配的文型。换个关键词，或清除筛选再试试。</div>';
+      return;
+    }
+    var html = '';
+    BN_CATS.forEach(function (c) {
+      var items = list.filter(function (e) { return e.cat === c.key; });
+      if (!items.length) return;
+      var mcat = items.filter(function (e) { return m[e.id]; }).length;
+      html += '<details class="typegroup" data-cat="' + c.key + '" open>' +
+        '<summary><span class="tg-label">' + c.name + '</span>' +
+        '<span class="tg-count">' + mcat + ' / ' + items.length + ' 掌握</span></summary>' +
+        '<div class="tg-body">' + items.map(function (e) { return bnCardHTML(e, m); }).join('') + '</div></details>';
+    });
+    box.innerHTML = html;
   }
 
   /* =========================================================
@@ -626,8 +739,13 @@
       answers: {}, qtimes: {}, submitted: false, startTs: Date.now(),
       budgetSec: (s.minutes || 3) * 60
     };
-    renderSession();
-    showSessionView();
+    /* 会话渲染在训练页容器里：若从其他页发起（如文型库的同族题链接），需切到 #practice 才可见 */
+    if (location.hash !== '#practice') {
+      location.hash = '#practice'; // hashchange → route() 渲染
+    } else {
+      renderSession();
+      showSessionView();
+    }
     startTimer();
     saveDraft();
   }
@@ -1414,6 +1532,83 @@
       if (!b) return;
       curWrongLabel = b.getAttribute('data-wl');
       renderReview();
+    });
+    // 文型库：分类/频度筛选、搜索、背诵模式、随机抽背、掌握标记与同族题跳转
+    document.getElementById('bn-cats').addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-c]') : null;
+      if (!b) return;
+      bnCat = b.getAttribute('data-c');
+      renderBunkei();
+    });
+    document.getElementById('bn-freq').addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('[data-f]') : null;
+      if (!b) return;
+      bnFreq = b.getAttribute('data-f');
+      renderBunkei();
+    });
+    document.getElementById('bn-search').addEventListener('input', function () {
+      bnQuery = this.value.trim();
+      renderBunkei();
+    });
+    document.getElementById('bn-recite').onclick = function () {
+      bnRecite = !bnRecite;
+      bnReveal = {};
+      document.body.classList.toggle('bn-recite', bnRecite);
+      renderBunkei();
+    };
+    document.getElementById('bn-hide').addEventListener('change', function () {
+      bnHide = this.checked;
+      renderBunkei();
+    });
+    document.getElementById('bn-random').onclick = function () {
+      var mm = bunkeiStore().m;
+      var pool = bunkeiAll().filter(function (e) {
+        if (mm[e.id]) return false;
+        if (bnCat !== 'all' && e.cat !== bnCat) return false;
+        if (bnFreq === 'high' && !e.freq) return false;
+        if (bnFreq === 'norm' && e.freq) return false;
+        return true;
+      });
+      if (!pool.length) { toast('当前筛选下没有未掌握的文型了', true); return; }
+      var pick = pool[Math.floor(Math.random() * pool.length)];
+      bnReveal = {};
+      bnReveal[pick.id] = true;
+      if (!bnRecite) { bnRecite = true; document.body.classList.add('bn-recite'); }
+      renderBunkei();
+      var el = document.querySelector('#bunkei-list [data-id="' + pick.id + '"]');
+      if (el) el.scrollIntoView({ block: 'center', behavior: motionOK() ? 'smooth' : 'auto' });
+    };
+    document.getElementById('bunkei-list').addEventListener('click', function (e) {
+      var t = e.target;
+      var mk = t.closest ? t.closest('[data-mk]') : null;
+      if (mk) {
+        var s = bunkeiStore();
+        s.m[mk.getAttribute('data-mk')] = 1;
+        bunkeiSave(s);
+        renderBunkei();
+        return;
+      }
+      var um = t.closest ? t.closest('[data-um]') : null;
+      if (um) {
+        var uid = um.getAttribute('data-um');
+        var s2 = bunkeiStore();
+        delete s2.m[uid];
+        bunkeiSave(s2);
+        bnReveal[uid] = false;
+        renderBunkei();
+        return;
+      }
+      var dr = t.closest ? t.closest('[data-drill]') : null;
+      if (dr) {
+        startSet(dr.getAttribute('data-drill'));
+        return;
+      }
+      if (!bnRecite) return;
+      var card = t.closest ? t.closest('.bncard') : null;
+      if (!card) return;
+      var cid = card.getAttribute('data-id');
+      bnReveal[cid] = !bnReveal[cid];
+      renderBunkei();
     });
     initBankUI();
     pruneData();

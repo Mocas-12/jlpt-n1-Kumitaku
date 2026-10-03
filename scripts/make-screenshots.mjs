@@ -82,7 +82,20 @@ async function newPage(theme) {
   console.log('[shots] docs/shot-mock.png');
 }
 
-/* 6. 深色模式（概览） */
+/* 6. 文型库（背诵模式：揭示一张卡片） */
+{
+  const page = await newPage('light');
+  await page.click('nav.tabs a[data-page="bunkei"]');
+  await page.locator('#bunkei-list .bncard').first().waitFor();
+  await page.click('#bn-recite');
+  await page.locator('#bunkei-list .bncard').first().click();
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'docs/shot-bunkei.png', clip: { x: 0, y: 0, width: 1200, height: 860 } });
+  await page.close();
+  console.log('[shots] docs/shot-bunkei.png');
+}
+
+/* 7. 深色模式（概览） */
 {
   const page = await newPage('dark');
   await page.screenshot({ path: 'docs/shot-dark.png', clip: { x: 0, y: 0, width: 1200, height: 660 } });

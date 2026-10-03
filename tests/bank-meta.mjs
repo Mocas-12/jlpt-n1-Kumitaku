@@ -15,3 +15,9 @@ export const KUMI = BANK.filter((s) => s.typeKey === 'kumi').length;
 export const SHO = BANK.filter((s) => s.typeKey === 'sho').length;
 export const FIRST_SET_ID = BANK[0].id;
 export { BANK };
+
+// 文型库规模（js/bunkei.js）
+const bnSrc = readFileSync('js/bunkei.js', 'utf8');
+const BUNKEI = new Function('window', bnSrc + '\nreturn window.BUNKEI;')({});
+export const BUNKEI_N = BUNKEI.length;
+export const BUNKEI_HIGH = BUNKEI.filter((e) => e.freq).length;
