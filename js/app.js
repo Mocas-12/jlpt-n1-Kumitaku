@@ -9,12 +9,10 @@
   var LS_DRAFT = 'kt_session_draft_v1';  // 未提交会话草稿（刷新/意外关闭后恢复进度）
   var LS_GROUP = 'kt_group_open_v1';     // 题组列表按题型折叠分组的展开状态（训练页/题库页共用）
   var LS_BUNKEI = 'kt_bunkei_v1';        // 文法库的掌握标记 { m: { id: 1 } }
-  var SIG_WORDS = ['にもかかわらず', 'とはいえ', 'これに対して', '言い換えれば', 'したがって', 'けれども', 'しかし', 'なぜなら', 'ところが', 'それでも', 'もっとも', 'たしかに', 'もちろん', 'すなわち', 'そのため', 'それゆえ', '要するに', 'つまり', '確かに', 'たしか', '一方', 'だが', 'ただし'];
-  var SIG_RE = new RegExp('(' + SIG_WORDS.join('|') + ')', 'g');
   var LABELS = ['①', '②', '③', '④'];
-  var TYPE_KEYS = ['bun1', 'kumi', 'sho'];
+  var TYPE_KEYS = ['bun1', 'kumi']; // 問題9（文章の文法）依托整篇阅读，专项由姊妹站 Yomitaku 承担
   var MOCK_BLUEPRINT = [ // 模拟卷蓝图：按官方大题构成抽取题组（不足则全取）
-    { key: 'bun1', sets: 2 }, { key: 'kumi', sets: 1 }, { key: 'sho', sets: 1 }
+    { key: 'bun1', sets: 2 }, { key: 'kumi', sets: 1 }
   ];
 
   /* ---------- storage ---------- */
@@ -151,7 +149,7 @@
     return /^https?:\/\//i.test(s) ? esc(s) : '#bank';
   }
   function typeInfo(key) {
-    var m = { bun1: '文の文法1（形式判断）·問題7', kumi: '文の文法2（組み立て）·問題8', sho: '文の文法3（文章の文法）·問題9' };
+    var m = { bun1: '文の文法1（形式判断）·問題7', kumi: '文の文法2（組み立て）·問題8' };
     var p = (m[key] || key).split('·');
     return { key: key, label: p[0], no: p[1] || '' };
   }
@@ -273,18 +271,17 @@
     }
   }
 
-  /* ---------- 阅读设置：字号（标准/大/特大）与行距（标准/加宽），会话即时生效 ---------- */
+  /* ---------- 阅读设置：题面字号（标准/大/特大），会话即时生效 ---------- */
   var LS_READER = 'kt_reader';
   function readerSettings() {
     try {
       var v = JSON.parse(localStorage.getItem(LS_READER)) || {};
-      return { fs: [0, 1, 2].indexOf(v.fs) >= 0 ? v.fs : 0, lh: v.lh === 1 ? 1 : 0 };
-    } catch (e) { return { fs: 0, lh: 0 }; }
+      return { fs: [0, 1, 2].indexOf(v.fs) >= 0 ? v.fs : 0 };
+    } catch (e) { return { fs: 0 }; }
   }
   function applyReader(r) {
     var h = document.documentElement;
     if (r.fs) h.setAttribute('data-rfs', r.fs); else h.removeAttribute('data-rfs');
-    if (r.lh) h.setAttribute('data-rlh', r.lh); else h.removeAttribute('data-rlh');
   }
   function saveReader(r) {
     applyReader(r);
@@ -295,15 +292,12 @@
     applyReader(r);
     var minus = document.getElementById('fs-minus');
     var plus = document.getElementById('fs-plus');
-    var lh = document.getElementById('lh-toggle');
     function sync() {
       minus.disabled = r.fs <= 0;
       plus.disabled = r.fs >= 2;
-      lh.classList.toggle('on', r.lh === 1);
     }
     minus.addEventListener('click', function () { r.fs = Math.max(0, r.fs - 1); saveReader(r); sync(); });
     plus.addEventListener('click', function () { r.fs = Math.min(2, r.fs + 1); saveReader(r); sync(); });
-    lh.addEventListener('click', function () { r.lh = r.lh ? 0 : 1; saveReader(r); sync(); });
     sync();
   }
 
@@ -316,62 +310,6 @@
       try { saved = localStorage.getItem(LS_THEME); } catch (e) {}
       if (saved !== 'dark' && saved !== 'light') applyTheme(mq.matches ? 'dark' : 'light');
     });
-  }
-
-  /* ---------- passage rendering ---------- */
-  /* sigOn：信号词衬底高亮由开关控制（默认关，还原考场素卷）；
-     ⟪…⟫ 划线句标记属于题面内容，不受开关影响。
-     句级 <span class="sent"> 供「解析引用 → 跳原文高亮」定位使用，无视觉差异 */
-  function passageHTML(text, sigOn) {
-    return String(text).split('\n').map(function (para) {
-      /* 划线句 ⟪…⟫ 整块一个句 span（可跨句号），
-         块外的普通文本再按句号切分——否则句级切分会把 mark 撕裂、留下裸 ⟪⟫ */
-      var out = '';
-      para.split(/(⟪[^⟫]*⟫)/).forEach(function (seg) {
-        if (!seg) return;
-        var t;
-        if (seg.charAt(0) === '⟪') {
-          t = esc(seg).replace(/⟪(.+?)⟫/g, '<mark class="uline">$1</mark>');
-          if (sigOn) t = t.replace(SIG_RE, '<mark class="sig">$1</mark>');
-          out += '<span class="sent">' + t + '</span>';
-          return;
-        }
-        (seg.match(/[^。？！]*[。？！]|[^。？！]+/g) || []).forEach(function (sen) {
-          t = esc(sen);
-          if (sigOn) t = t.replace(SIG_RE, '<mark class="sig">$1</mark>');
-          out += '<span class="sent">' + t + '</span>';
-        });
-      });
-      return '<p>' + out + '</p>';
-    }).join('');
-  }
-  /* 解析里的「…」引用能否在原文中找到（去划线标记与空白后子串匹配） */
-  function quoteIn(e, hay) {
-    var ms = String(e).match(/「([^「」]{4,80})」/g) || [];
-    for (var i = 0; i < ms.length; i++) {
-      var q = ms[i].slice(1, -1).replace(/[『』\s]/g, '');
-      if (q.length >= 4 && hay.indexOf(q) >= 0) return q;
-    }
-    return null;
-  }
-  function jumpToQuote(g, quote) {
-    var p = document.querySelector('.passage[data-g="' + g + '"]');
-    if (!p) return;
-    var sents = Array.prototype.slice.call(p.querySelectorAll('.sent'));
-    var hay = '', map = [];
-    sents.forEach(function (sp, i) {
-      // 与 hayCache 同口径剥离 ⟪⟫（划线标记只是视觉层，不参与文本匹配）
-      var t = sp.textContent.replace(/[⟪⟫\s]/g, '');
-      map.push({ i: i, start: hay.length, end: hay.length + t.length });
-      hay += t;
-    });
-    var at = hay.indexOf(quote);
-    if (at < 0) { toast('原文中未定位到该引用', false); return; }
-    var hit = map.filter(function (m) { return m.start < at + quote.length && m.end > at; })
-      .map(function (m) { return sents[m.i]; });
-    document.querySelectorAll('.passage .sent.hl').forEach(function (sp) { sp.classList.remove('hl'); });
-    hit.forEach(function (sp) { sp.classList.add('hl'); });
-    if (hit.length) hit[0].scrollIntoView({ block: 'center', behavior: motionOK() ? 'smooth' : 'auto' });
   }
 
   /* ---------- session state ---------- */
@@ -475,7 +413,7 @@
     { key: 'inka', name: '原因・理由' }, { key: 'jouken', name: '条件・仮定' },
     { key: 'kyouchou', name: '強調・断定・文末' }, { key: 'bungo', name: '文語・残存表現' },
     { key: 'taiguu', name: '敬語・待遇' },
-    { key: 'bunmyaku', name: '接続詞・文脈（問題9）' }
+    { key: 'bunmyaku', name: '接続詞・文脈' }
   ];
   var bnCat = 'all', bnFreq = 'all', bnQuery = '', bnRecite = false, bnHide = false;
   var bnReveal = {};
@@ -587,7 +525,7 @@
   var curQuery = '';      // 标题关键词搜索
   var curWrongLabel = 'all'; // 错题本的考点筛选
   /* 考点标签固定词表（与 js/bank/ 出题配方一致；新标签出现时自动追加进筛选项） */
-  var QLABELS = ['近义辨析', '接续制约', '呼应制约', '敬語', '文末表现', '句序组合', '文脉衔接', '接续词', '指示照应'];
+  var QLABELS = ['近义辨析', '接续制约', '呼应制约', '敬語', '文末表现', '句序组合'];
   function labelChipsHTML(sets, cur) { // 训练页/错题本共用的考点筛选 chips（只列出有题的标签）
     var have = {};
     sets.forEach(function (s) {
@@ -864,29 +802,14 @@
       rb.innerHTML = '';
       rb.className = 'big';
     }
-    var sigOn = document.getElementById('sig-toggle').checked; // 开关状态：喂给 passageHTML（曾因"从未读取"被误删）
     var body = '';
     var qnNo = 0; // 混合/模拟卷模式下按顺序重新编号
-    var hayCache = {}; // gi → 原文纯文本（解析引用匹配用）
     session.groups.forEach(function (g, gi) {
       var s = g.set, t = typeInfo(s.typeKey);
-      hayCache[gi] = ((s.passageA || '') + (s.passageB || '') + (s.passage || '')).replace(/[⟪⟫\s]/g, '');
       body += '<div class="card" style="padding:14px 18px"><h3 style="margin:0;font-size:16px">' + esc(s.title) +
         ' <span class="badge" style="margin-left:8px">' + t.label + '</span>' +
         (s.source ? ' <a class="badge gray" style="margin-left:6px" href="' + safeUrl(s.sourceUrl) + '" target="_blank" rel="noopener">来源：' + esc(s.source) + '</a>' : '') +
         '</h3></div>';
-      /* 形式判断/組み立て题型无 passage（句子在 q 里），只有文章の文法渲染原文卡 */
-      if (s.passage || (s.passageA && s.passageB)) {
-        var phtml = '<div class="passage" data-g="' + gi + '">';
-        if (s.passageA) {
-          phtml += '<p><span class="labelA">文A</span></p>' + passageHTML(s.passageA, sigOn);
-          phtml += '<p><span class="labelA">文B</span></p>' + passageHTML(s.passageB, sigOn);
-        } else {
-          phtml += passageHTML(s.passage, sigOn);
-        }
-        phtml += '</div>';
-        body += phtml;
-      }
       g.qidx.forEach(function (qi) {
         var q = s.questions[qi];
         var key = s.id + ':' + qi;
@@ -914,11 +837,9 @@
             exp += '<ul>' + q.explain.map(function (e, i) {
               var mark = i === q.answer ? '<b style="color:var(--ok)">［正解 ' + LABELS[i] + '］</b>' : '<b>［' + LABELS[i] + '］</b>';
               var opText = String(q.options[i] || '');
-              var quote = quoteIn(e, hayCache[gi]); // 解析引用可定位原文 → 可点击跳转
-              return '<li' + (quote ? ' class="jq" data-g="' + gi + '" data-q="' + esc(quote) + '"' : '') + '>' +
+              return '<li>' +
                 mark + esc(opText).slice(0, 26) + (opText.length > 26 ? '…' : '') +
-                ' <span class="why">' + esc(e) + '</span>' +
-                (quote ? '<span class="jump">原文 ↗</span>' : '') + '</li>';
+                ' <span class="why">' + esc(e) + '</span></li>';
             }).join('') + '</ul>';
           } else {
             exp += '<p style="margin:4px 0 0">正解：<b style="color:var(--ok)">' + LABELS[q.answer] + ' ' + esc(q.options[q.answer]) + '</b></p>';
@@ -1240,31 +1161,17 @@
       if (TYPE_KEYS.indexOf(s.typeKey) < 0) throw new Error(at + '：typeKey 必须是 ' + TYPE_KEYS.join(' / '));
       if (!s.title) throw new Error(at + '：缺少 title');
       if (s.sourceUrl && !/^https?:\/\//i.test(s.sourceUrl)) throw new Error(at + '：sourceUrl 必须以 http(s) 开头');
-      if (s.passageA || s.passageB) throw new Error(at + '：文法题库不使用 passageA/passageB（那是読解統合理解的字段）');
-      if (s.typeKey === 'sho') {
-        if (!s.passage) throw new Error(at + '：sho（文章の文法）缺少 passage');
-        if (!~s.passage.indexOf('【一】') || !~s.passage.indexOf('【二】') || !~s.passage.indexOf('【三】') || !~s.passage.indexOf('【四】')) {
-          throw new Error(at + '：sho 的 passage 需包含【一】【二】【三】【四】四个空栏标记');
-        }
-      } else if (s.passage) {
-        throw new Error(at + '：' + s.typeKey + ' 题组不需要 passage（句子写在 q 里）');
-      }
+      if (s.passageA || s.passageB || s.passage) throw new Error(at + '：文法题库不使用 passage（句子写在 q 里；文章侧的問題9 训练请用姊妹站 Yomitaku）');
       if (!Array.isArray(s.questions) || !s.questions.length) throw new Error(at + '：questions 不能为空');
       s.questions.forEach(function (q, j) {
         var qat = at + ' 第 ' + (j + 1) + ' 题';
         if (!q.q || typeof q.q !== 'string') throw new Error(qat + '：缺少 q（题面原文）');
         if (s.typeKey === 'bun1' && q.q.indexOf('＿＿') < 0) throw new Error(qat + '：bun1 的 q 应包含 ＿＿ 空格');
         if (s.typeKey === 'kumi' && (q.q.indexOf('＿＿') < 0 || q.q.indexOf('＊') < 0)) throw new Error(qat + '：kumi 的 q 应包含 ＿＿ 空格与 ＊ 目标标记');
-        if (s.typeKey === 'sho') {
-          var mb = q.q.match(/【[一二三四]】/);
-          if (!mb) throw new Error(qat + '：sho 的 q 应指明对应空栏（如「【一】に入れるのに…」）');
-          if (!~s.passage.indexOf(mb[0])) throw new Error(qat + '：' + q.q.slice(0, 2) + ' 在 passage 中不存在');
-        }
         if (!Array.isArray(q.options) || q.options.length !== 4) throw new Error(qat + '：options 必须是 4 个');
         if (typeof q.answer !== 'number' || q.answer < 0 || q.answer > 3 || q.answer % 1 !== 0) throw new Error(qat + '：answer 必须是 0-3 的整数');
         if (q.explain && (!Array.isArray(q.explain) || q.explain.length !== 4)) throw new Error(qat + '：explain 需与 options 等长（4 个），或留空');
       });
-      if (s.typeKey === 'sho' && s.questions.length !== 4) throw new Error(at + '：sho 题组应包含 4 题（对应【一】〜【四】）');
       if (seen[s.id]) throw new Error('存在重复 id：' + s.id);
       seen[s.id] = 1;
       s.minutes = s.minutes || 3;
@@ -1502,15 +1409,6 @@
     qrModal.addEventListener('click', function (e) { if (e.target === qrModal) qrModal.hidden = true; });
     // 键盘作答：1〜4 选择、Enter 提交
     document.addEventListener('keydown', onKeydown);
-    // 解析引用 → 原文定位（事件委托，重建后依然有效）
-    document.getElementById('session-body').addEventListener('click', function (e) {
-      var li = e.target.closest ? e.target.closest('li.jq') : null;
-      if (!li) return;
-      jumpToQuote(li.getAttribute('data-g'), li.getAttribute('data-q'));
-    });
-    document.getElementById('sig-toggle').addEventListener('change', function () {
-      if (session) renderSession();
-    });
     // 筛选按钮：事件委托，innerHTML 重建后依然有效
     document.getElementById('filterbar').addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('.fbtn') : null;

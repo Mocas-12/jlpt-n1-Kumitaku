@@ -38,7 +38,7 @@
 
 ## ✨ Features
 
-- 🧭 **Organized by official question types**: mapped against the JLPT official《大題的測試目標》, it covers all three grammar sections — 問題7 文の文法1 (grammar-form judgement), 問題8 文の文法2 (sentence assembly / 統整文), 問題9 文の文法3 (discourse grammar)
+- 🧭 **Organized by official question types**: mapped against the JLPT official《大題的測試目標》, it covers the language-knowledge grammar sections — 問題7 文の文法1 (grammar-form judgement) and 問題8 文の文法2 (sentence assembly / 統整文). 問題9 (discourse grammar) rides on full passages and overlaps with reading, so its drills live in the sister site Yomitaku
 - ⚡ **Quick tactic library**: three-line elimination (接続 connection · 呼応 co-occurrence · 语气 register), a 28-pattern quick reference grouped by near-synonym families, a seven-category trap checklist, and a 110-minute time budget
 - 🗂 **Pattern library with recite mode (文法库)**: 287 entries covering the full N1 surface — N1 patterns, literary relics (〜まじき・〜べからず), and the compound particles / N2-carryover forms that keep reappearing in 問題7 options — each with its connection rule, meaning, an original example sentence with translation, near-synonym notes, a high-frequency flag (101 exam hot list) and a 出題基準 badge (99 entries verified against the pre-2010 official《日本語能力試験出題基準》1級 grammar list); **recite mode** hides the meaning until you click, marks patterns as mastered with localStorage progress, offers random pick-drilling, and links every pattern to its same-family drill set
 - ⏱️ **Timed practice**: each set carries a per-question time budget with a real-time timer; overtime is flagged in red, reproducing exam pacing
@@ -77,7 +77,7 @@ The visual identity keeps the manga-washi card language of Yomitaku, swapping th
 ```
 技巧库（接続・呼応・语气 三线排查 + 高频文法速查）
         ↓
-专项训练（26 组原创题 · 计时 · 键盘作答）
+专项训练（20 组原创题 · 计时 · 键盘作答）
         ↓
 逐选项解析（干扰项陷阱归类 + 正解三要素说明）
         ↓
@@ -88,7 +88,7 @@ The visual identity keeps the manga-washi card language of Yomitaku, swapping th
 
 ## 📚 Question Bank & Copyright
 
-The built-in bank is **26 sets / 132 original questions** (clearly marked as non-past-paper mocks): 60 form-judgement items grouped by near-synonym families (逆接・讓步, 義務・被迫, 敬語 …), 48 sentence-assembly items in the exact official ＊-slot format, and 24 discourse-grammar items over six original passages.
+The built-in bank is **20 sets / 108 original questions** (clearly marked as non-past-paper mocks): 60 form-judgement items grouped by near-synonym families (逆接・讓步, 義務・被迫, 敬語 …) and 48 sentence-assembly items in the exact official ＊-slot format. 問題9 (discourse grammar) rides on full passages and overlaps with reading — its drills live in the sister site Yomitaku.
 
 JLPT past papers are copyrighted by Japan Foundation / JEES and commercial prep books by their authors. This site ships none of them. To drill with your own books, transcribe questions into the JSON format and import them on the 真題·題库 page — an AI transcription prompt is provided for one-paste conversion.
 
@@ -102,15 +102,14 @@ JLPT past papers are copyrighted by Japan Foundation / JEES and commercial prep 
 ├── js/bank/                 # built-in question bank shards (pure data)
 │   ├── core.js              #   shared header + window.BANK
 │   ├── bun1.js              #   問題7 形式判断 ×12 sets / 60 items
-│   ├── kumi.js              #   問題8 組み立て   ×8 sets / 48 items
-│   └── sho.js               #   問題9 文章の文法 ×6 sets / 24 items
+│   └── kumi.js              #   問題8 組み立て   ×8 sets / 48 items
 ├── scripts/                 # dev tooling (zero-dep node scripts)
 │   ├── check-bank.mjs       #   bank structure & quality validation (npm run check)
 │   ├── version.mjs          #   content-hash asset fingerprinting + SW cache busting
 │   ├── make-assets.mjs      #   OG banner + PWA icons (needs Playwright)
 │   ├── make-screenshots.mjs #   README screenshots
 │   └── update-docs.mjs      #   sync bank-size numbers into READMEs
-├── tests/                   # Playwright smoke tests (19 scenarios)
+├── tests/                   # Playwright smoke tests (18 scenarios)
 ├── public/                  # logo / icons / OG banner / support QR
 └── .github/workflows/       # CI: bank check → smoke test → deploy to Pages
 ```
@@ -125,7 +124,7 @@ JLPT past papers are copyrighted by Japan Foundation / JEES and commercial prep 
 ```bash
 npm install          # dev-only dependency: Playwright
 npm run check        # validate the question bank (structure, answers, distribution)
-npm test             # run the 19 smoke scenarios against a local server
+npm test             # run the 18 smoke scenarios against a local server
 npm run hash         # rewrite asset ?v= hashes + SW cache name
 npm run assets       # regenerate OG banner / icons (needs Chromium)
 node tests/server.mjs 8322   # serve locally, then node scripts/make-screenshots.mjs

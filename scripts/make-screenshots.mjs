@@ -51,14 +51,13 @@ async function newPage(theme) {
   console.log('[shots] docs/shot-practice.png');
 }
 
-/* 4. 文章の文法：原文 + 解析（浅色，信号词高亮开启） */
+/* 4. 組み立て训练 + 逐项解析（浅色） */
 {
   const page = await newPage('light');
   await page.click('nav.tabs a[data-page="practice"]');
-  await page.click('#filterbar .fbtn[data-f="sho"]');
+  await page.click('#filterbar .fbtn[data-f="kumi"]');
   await page.locator('#set-cards .setcard h3').first().click();
   await page.waitForTimeout(300);
-  await page.check('#sig-toggle');
   // 全答①后提交，出解析
   const n = await page.locator('#session-body .qblock').count();
   for (let i = 0; i < n; i++) {

@@ -10,11 +10,9 @@
    - 退出码：有 error 为 1，供 CI / 提交前把关。 */
 import { readFileSync } from 'node:fs';
 
-const TYPE_KEYS = ['bun1', 'kumi', 'sho'];
-const LABELS = ['近义辨析', '接续制约', '呼应制约', '敬語', '文末表现', '句序组合', '文脉衔接', '接续词', '指示照应'];
-const BLANKS = ['【一】', '【二】', '【三】', '【四】'];
-const TYPE_NAMES = { bun1: '形式判断', kumi: '組み立て', sho: '文章の文法' };
-const SHO_PASSAGE_FLOOR = 250;
+const TYPE_KEYS = ['bun1', 'kumi'];
+const LABELS = ['近义辨析', '接续制约', '呼应制约', '敬語', '文末表现', '句序组合'];
+const TYPE_NAMES = { bun1: '形式判断', kumi: '組み立て' };
 
 const bankSrc = ['core', ...TYPE_KEYS]
   .map((f) => readFileSync(new URL(`../js/bank/${f}.js`, import.meta.url), 'utf8'))
@@ -45,27 +43,13 @@ for (const s of BANK) {
   if (!s.minutes) errors.push(`${at}: 缺 minutes`);
   if (s.sourceUrl && !/^https?:\/\//i.test(s.sourceUrl)) errors.push(`${at}: sourceUrl 非 http(s)`);
 
-  /* 类型专属结构检查 */
-  if (s.typeKey === 'sho') {
-    const len = (s.passage || '').length;
-    if (!s.passage) errors.push(`${at}: sho 缺 passage`);
-    else {
-      BLANKS.forEach((b, i) => {
-        if (!s.passage.includes(b)) errors.push(`${at}: passage 缺空栏 ${b}`);
-        const qi = s.questions && s.questions[i];
-        if (qi && !qi.q.includes(b)) errors.push(`${at}#${i}: q 未指向本空栏 ${b}`);
-      });
-      if (len < SHO_PASSAGE_FLOOR) errors.push(`${at}: sho 字数 ${len} 低于下限 ${SHO_PASSAGE_FLOOR}`);
-      if (Array.isArray(s.questions) && s.questions.length !== 4) errors.push(`${at}: sho 题数应为 4（对应四空栏）`);
-    }
-  } else if (s.passage) {
-    errors.push(`${at}: ${TYPE_NAMES[s.typeKey]} 题组不应带 passage`);
-  }
+  /* 结构检查：纯文法站不接受任何 passage（問題9 文章侧由姊妹站承担） */
+  if (s.passage) errors.push(`${at}: ${TYPE_NAMES[s.typeKey]} 题组不应带 passage`);
 
   for (const [i, q] of (s.questions || []).entries()) {
     totalQ++;
     if (!q.q || typeof q.q !== 'string') { errors.push(`${at}#${i}: 缺 q`); continue; }
-    if (s.typeKey !== 'sho' && !q.q.includes('＿＿')) errors.push(`${at}#${i}: q 缺＿＿空格`);
+    if (!q.q.includes('＿＿')) errors.push(`${at}#${i}: q 缺＿＿空格`);
     if (s.typeKey === 'kumi') {
       const star = (q.q.match(/＊/g) || []).length;
       if (star !== 1) errors.push(`${at}#${i}: kumi 的 q 应恰好含 1 个 ＊（实际 ${star}）`);

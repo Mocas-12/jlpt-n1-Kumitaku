@@ -5,14 +5,13 @@
 import { readFileSync } from 'node:fs';
 
 // 分片按序拼接，window 垫片让分片的 window.BANK 在函数作用域里可求值
-const src = ['core', 'bun1', 'kumi', 'sho']
+const src = ['core', 'bun1', 'kumi']
   .map((f) => readFileSync(`js/bank/${f}.js`, 'utf8'))
   .join('\n');
 const BANK = new Function('window', src + '\nreturn window.BANK;')({});
 export const ALL_SETS = BANK.length;
 export const BUN1 = BANK.filter((s) => s.typeKey === 'bun1').length;
 export const KUMI = BANK.filter((s) => s.typeKey === 'kumi').length;
-export const SHO = BANK.filter((s) => s.typeKey === 'sho').length;
 export const FIRST_SET_ID = BANK[0].id;
 export { BANK };
 

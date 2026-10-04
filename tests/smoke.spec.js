@@ -1,6 +1,6 @@
 /* 冒烟测试：守护核心链路与历史 bug（筛选丢行、未答完提交、导入校验、組み立て无原文渲染） */
 import { test, expect } from '@playwright/test';
-import { ALL_SETS, BUN1, SHO, FIRST_SET_ID, BUNKEI_N, BUNKEI_HIGH } from './bank-meta.mjs';
+import { ALL_SETS, BUN1, KUMI, FIRST_SET_ID, BUNKEI_N, BUNKEI_HIGH } from './bank-meta.mjs';
 
 // 「全部」视图的题组列表按题型折叠（默认收起）：点击卡片前先展开各组
 const openGroups = (page) => page.evaluate(() =>
@@ -53,20 +53,13 @@ test('完整链路：筛选 → 作答 → 提交出分 → 列表显示最好�
   await expect(page.locator('#set-cards .setcard .best').first()).toContainText(/最好成绩 \d+\/\d+/);
 });
 
-test('組み立て题组：题面含 ＊ 骨架，文章の文法题组渲染原文', async ({ page }) => {
+test('組み立て题组：题面含 ＊ 骨架，纯文法无原文卡', async ({ page }) => {
   await page.goto('/#practice');
   await page.click('#filterbar .fbtn[data-f="kumi"]');
   await page.locator('#set-cards .setcard h3').first().click();
   await expect(page.locator('#session-view')).toBeVisible();
   await expect(page.locator('#session-body .qstem').first()).toContainText('＊');
   await expect(page.locator('#session-body .passage')).toHaveCount(0);
-  await page.click('#btn-back');
-
-  await page.click('#filterbar .fbtn[data-f="sho"]');
-  await page.locator('#set-cards .setcard h3').first().click();
-  await expect(page.locator('#session-view')).toBeVisible();
-  await expect(page.locator('#session-body .passage')).toHaveCount(1);
-  await expect(page.locator('#session-body .passage')).toContainText('【一】');
 });
 
 test('未答完提交先确认，取消后不判分', async ({ page }) => {
@@ -106,7 +99,7 @@ test('导入校验：缺少 q 字段报错且不入库', async ({ page }) => {
   await expect(page.locator('#bank-count')).toContainText(`${ALL_SETS} 组题`);
 });
 
-test('导入校验：bun1 带 passage 拒绝、合法题组正常入库', async ({ page }) => {
+test('导入校验：passage 一律拒绝、合法题组正常入库', async ({ page }) => {
   await page.goto('/#bank');
   const withPassage = [{
     id: 'bad-2', typeKey: 'bun1', title: '多余的 passage', minutes: 2, passage: '不该有',
@@ -117,11 +110,10 @@ test('导入校验：bun1 带 passage 拒绝、合法题组正常入库', async 
   await expect(page.locator('#toast')).toContainText('passage');
 
   const good = [{
-    id: 'test-import-1', typeKey: 'sho', title: '冒烟测试题组', minutes: 4,
-    passage: 'テストの文章である。【一】。確認はここまでだ。【二】。さらに続く。【三】。最後まで書く。【四】。以上。',
-    questions: [1, 2, 3, 4].map((n) => ({
-      q: `【${'一二三四'[n - 1]}】に入れるのに最もよいものを、①・②・③・④から一つ選びなさい。`,
-      label: '文脉衔接', options: ['①', '②', '③', '④'], answer: n % 4,
+    id: 'test-import-1', typeKey: 'kumi', title: '冒烟测试题组', minutes: 4,
+    questions: [1, 2, 3].map((n) => ({
+      q: `田中さんは　＿＿・＿＿　＊＿＿・＿＿　帰国したそうだ。(${n})`,
+      label: '句序组合', options: ['①', '②', '③', '④'], answer: n % 4,
     })),
   }];
   await page.fill('#bank-import-text', JSON.stringify(good));
@@ -262,22 +254,6 @@ test('会话草稿加固：篡改的下标/答案被兜底，全非法时整份�
   await expect(page.locator('#set-list')).toBeVisible();
   expect(await page.evaluate(() => localStorage.getItem('kt_session_draft_v1'))).toBeNull();
   expect(errors).toEqual([]);
-});
-
-test('信号词高亮开关：默认素卷，勾选后衬底高亮，取消后消失（文章の文法）', async ({ page }) => {
-  await page.goto('/#practice');
-  await page.click('#filterbar .fbtn[data-f="sho"]');
-  await page.locator('#set-cards .setcard h3').first().click();
-  await expect(page.locator('#session-view')).toBeVisible();
-
-  // 默认未勾选：正文无信号词衬底（首篇正文含「しかし」，回归看守：曾恒高亮）
-  await expect(page.locator('#session-body mark.sig')).toHaveCount(0);
-
-  await page.check('#sig-toggle');
-  await expect(page.locator('#session-body mark.sig').first()).toContainText('しかし');
-
-  await page.uncheck('#sig-toggle');
-  await expect(page.locator('#session-body mark.sig')).toHaveCount(0);
 });
 
 test('练习记录备份：导入覆盖生效、非法 kind 拒绝、可导出', async ({ page }) => {
@@ -421,7 +397,7 @@ test('模拟卷：按官方構成组卷（形式判断10 + 組み立て + 文章
   await expect(page.locator('#session-view')).toBeVisible();
   await expect(page.locator('#session-head-title')).toContainText('模拟卷');
   const qn = await page.locator('#session-body .qblock').count();
-  expect(qn).toBe(20); // bun1 2组×5問 + kumi 1组×6問 + sho 1组×4問
+  expect(qn).toBe(16); // bun1 2组×5問 + kumi 1组×6問
   // 全局计时器在走
   await expect(page.locator('#timer')).toBeVisible();
 });
