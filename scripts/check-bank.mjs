@@ -11,7 +11,7 @@
 import { readFileSync } from 'node:fs';
 
 const TYPE_KEYS = ['bun1', 'kumi'];
-const LABELS = ['近义辨析', '接续制约', '呼应制约', '敬語', '文末表现', '句序组合'];
+const LABELS = ['近义辨析', '接续制约', '呼应制约', '敬語', '文末表现', '句序组合', '接续词'];
 const TYPE_NAMES = { bun1: '形式判断', kumi: '組み立て' };
 
 const bankSrc = ['core', ...TYPE_KEYS]

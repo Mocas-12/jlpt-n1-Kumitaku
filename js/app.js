@@ -525,7 +525,7 @@
   var curQuery = '';      // 标题关键词搜索
   var curWrongLabel = 'all'; // 错题本的考点筛选
   /* 考点标签固定词表（与 js/bank/ 出题配方一致；新标签出现时自动追加进筛选项） */
-  var QLABELS = ['近义辨析', '接续制约', '呼应制约', '敬語', '文末表现', '句序组合'];
+  var QLABELS = ['近义辨析', '接续制约', '呼应制约', '敬語', '文末表现', '句序组合', '接续词'];
   function labelChipsHTML(sets, cur) { // 训练页/错题本共用的考点筛选 chips（只列出有题的标签）
     var have = {};
     sets.forEach(function (s) {
