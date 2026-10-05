@@ -77,7 +77,7 @@ The visual identity keeps the manga-washi card language of Yomitaku, swapping th
 ```
 技巧库（接続・呼応・语气 三线排查 + 高频文法速查）
         ↓
-专项训练（142 组原创题 · 计时 · 键盘作答）
+专项训练（187 组原创题 · 计时 · 键盘作答）
         ↓
 逐选项解析（干扰项陷阱归类 + 正解三要素说明）
         ↓
@@ -88,7 +88,7 @@ The visual identity keeps the manga-washi card language of Yomitaku, swapping th
 
 ## 📚 Question Bank & Copyright
 
-The built-in bank is **142 sets / 758 original questions** (clearly marked as non-past-paper mocks): 470 form-judgement items grouped by 40+ near-synonym families (concession, cause, condition, emphasis, honorifics, literary relics, compound particles, co-occurrence, discourse connectors …) and 288 sentence-assembly items in the exact official ＊-slot format, each puzzle argued for assembly uniqueness. 問題9 (discourse grammar) rides on full passages and overlaps with reading — its drills live in the sister site Yomitaku.
+The built-in bank is **187 sets / 1004 original questions** (clearly marked as non-past-paper mocks): 590 form-judgement items grouped by 40+ near-synonym families (concession, cause, condition, emphasis, honorifics, literary relics, compound particles, co-occurrence, discourse connectors …) and 414 sentence-assembly items in the exact official ＊-slot format, each puzzle argued for assembly uniqueness. 問題9 (discourse grammar) rides on full passages and overlaps with reading — its drills live in the sister site Yomitaku.
 
 JLPT past papers are copyrighted by Japan Foundation / JEES and commercial prep books by their authors. This site ships none of them. To drill with your own books, transcribe questions into the JSON format and import them on the 真題·題库 page — an AI transcription prompt is provided for one-paste conversion.
 
@@ -101,8 +101,8 @@ JLPT past papers are copyrighted by Japan Foundation / JEES and commercial prep 
 ├── js/bunkei.js             # pattern library data (287 patterns, 13 categories, 出題基準 verified)
 ├── js/bank/                 # built-in question bank shards (pure data)
 │   ├── core.js              #   shared header + window.BANK
-│   ├── bun1.js              #   問題7 形式判断 ×94 sets / 470 items
-│   └── kumi.js              #   問題8 組み立て   ×48 sets / 288 items
+│   ├── bun1.js              #   問題7 形式判断 ×118 sets / 590 items
+│   └── kumi.js              #   問題8 組み立て   ×69 sets / 414 items
 ├── scripts/                 # dev tooling (zero-dep node scripts)
 │   ├── check-bank.mjs       #   bank structure & quality validation (npm run check)
 │   ├── version.mjs          #   content-hash asset fingerprinting + SW cache busting
