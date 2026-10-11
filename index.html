@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=dc21b2ac">
+<link rel="stylesheet" href="css/style.css?v=b09ffd33">
 </head>
 <body>
 
@@ -65,19 +65,20 @@
   <!-- ================= 概览 ================= -->
   <section class="page" id="page-home">
     <div class="hero">
+      <canvas class="ink" id="hero-ink" aria-hidden="true"></canvas>
       <span class="sticker">文法の型、ここにあり！</span>
       <span class="sticker sticker-2">毎日10問、コツコツ固まる</span>
-      <p class="eyebrow">文法２１問を固めれば、言語知識は盤石</p>
-      <h1>JLPT N1 <em>文法</em> 特訓</h1>
-      <p class="lead">按官方文法题型（問題7 形式判断・問題8 組み立て）整理快速解题技巧，配「计时训练 → 逐项解析 → 错题重练」的闭环。問題9（文章の文法）依托整篇文章、与読解高度重叠，专项训练交给姊妹站 Yomitaku。N1 文法的难点不在量，而在近义文法的辨析——本站用「接续 · 呼应 · 语气」三条线索拆解每一组形近义近的文法。内置一套按官方出题目标编写的原创模拟题库（明确标注非真题），也支持导入你自己的题库；练习数据只保存在你的浏览器里。</p>
+      <p class="eyebrow" data-reveal>文法２１問を固めれば、言語知識は盤石</p>
+      <h1 data-reveal>JLPT N1 <em>文法</em> 特訓</h1>
+      <p class="lead" data-reveal>按官方文法题型（問題7 形式判断・問題8 組み立て）整理快速解题技巧，配「计时训练 → 逐项解析 → 错题重练」的闭环。問題9（文章の文法）依托整篇文章、与読解高度重叠，专项训练交给姊妹站 Yomitaku。N1 文法的难点不在量，而在近义文法的辨析——本站用「接续 · 呼应 · 语气」三条线索拆解每一组形近义近的文法。内置一套按官方出题目标编写的原创模拟题库（明确标注非真题），也支持导入你自己的题库；练习数据只保存在你的浏览器里。</p>
       <div class="facts">
-        <div class="fact"><div class="num">110<small> 分</small></div><div class="lbl">言語知識・読解 <span class="keep">考试总时长</span></div></div>
-        <div class="fact"><div class="num">60<small> 点</small></div><div class="lbl">言語知識 满分<span class="keep">（文字·語彙·文法合计）</span></div></div>
-        <div class="fact"><div class="num">19<small> 点</small></div><div class="lbl">基准点<span class="keep">（低于即不合格）</span></div></div>
-        <div class="fact"><div class="num"><span data-bank-stat="sets">187</span><small> 组题</small></div><div class="lbl">原创模拟题 · <span data-bank-stat="q">1004</span>&nbsp;问 · 問題7・8 全覆盖</div></div>
+        <div class="fact" data-reveal><div class="num">110<small> 分</small></div><div class="lbl">言語知識・読解 <span class="keep">考试总时长</span></div></div>
+        <div class="fact" data-reveal><div class="num">60<small> 点</small></div><div class="lbl">言語知識 满分<span class="keep">（文字·語彙·文法合计）</span></div></div>
+        <div class="fact" data-reveal><div class="num">19<small> 点</small></div><div class="lbl">基准点<span class="keep">（低于即不合格）</span></div></div>
+        <div class="fact" data-reveal><div class="num"><span data-bank-stat="sets">187</span><small> 组题</small></div><div class="lbl">原创模拟题 · <span data-bank-stat="q">1004</span>&nbsp;问 · 問題7・8 全覆盖</div></div>
       </div>
-      <a class="btn" href="#practice">开始专项训练 →</a>
-      <a class="btn ghost" href="#tech" style="margin-left:10px">先学解题技巧</a>
+      <a class="btn" href="#practice" data-reveal>开始专项训练 →</a>
+      <a class="btn ghost" href="#tech" style="margin-left:10px" data-reveal>先学解题技巧</a>
     </div>
 
     <h2 class="page-title" style="margin-top:34px">官方出题构成（N1 文法）</h2>
@@ -486,10 +487,11 @@
 </div>
 
 <script defer src="js/bank/core.js?v=401027a1"></script>
-<script defer src="js/bank/bun1.js?v=10e89c05"></script>
+<script defer src="js/bank/bun1.js?v=8511c18d"></script>
 <script defer src="js/bank/kumi.js?v=d1078c38"></script>
 <script defer src="js/bunkei.js?v=4a4fbc2c"></script>
 <script defer src="js/app.js?v=3c2dec27"></script>
+<script src="js/hero-ink.js?v=827c002c"></script>
 <script>
 /* PWA：注册 Service Worker（file:// 直接打开时自动跳过） */
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === '127.0.0.1' || location.hostname === 'localhost')) {
