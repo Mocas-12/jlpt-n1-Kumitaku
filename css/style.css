@@ -10,6 +10,8 @@
   --pop-soft: #fff3c4;
   --sky: #6c5bd4;
   --sky-soft: #ece9fb;
+  --bad: #e8433a;             /* 错误/答错红（与 Yomitaku accent 同族） */
+  --bad-soft: rgba(232, 67, 58, .12);
   --ok: #1fae6e;
   --ok-soft: #e2f8ec;
   --serif: "Noto Serif JP", "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", serif;
@@ -39,6 +41,8 @@
   --muted: #a09cb0;
   --accent: #5db1e8;
   --accent-soft: rgba(93, 177, 232, .16);
+  --bad: #ff5f56;
+  --bad-soft: rgba(255, 95, 86, .14);
   --pop: #ffd23f;
   --pop-soft: rgba(255, 210, 63, .13);
   --sky: #a79bf0;
@@ -217,7 +221,7 @@ h1, h2, h3 { font-family: var(--serif); line-height: 1.4; }
   font-size: 12px; font-weight: 700; background: var(--sky-soft); color: var(--sky-deep);
   border: 2px solid var(--ink); white-space: nowrap; font-family: var(--sans);
 }
-.badge.red { background: var(--accent-soft); color: var(--accent); }
+.badge.red { background: var(--bad-soft); color: var(--bad); }
 .badge.gray { background: var(--soft-gray); color: var(--muted); }
 
 /* ---------- hero ---------- */
@@ -434,12 +438,12 @@ mark.uline { background: none; color: inherit; border-bottom: 3px solid var(--ac
 .opt.sel .tag { background: var(--ink); color: var(--bg); }
 .opt.correct { background: var(--ok-soft); border-color: var(--ok); box-shadow: 3px 3px 0 var(--ok); }
 .opt.correct .tag { background: var(--ok); border-color: var(--ok); color: #fff; }
-.opt.wrongpick { background: var(--accent-soft); border-color: var(--accent); box-shadow: 3px 3px 0 var(--accent); }
-.opt.wrongpick .tag { background: var(--accent); border-color: var(--accent); color: #fff; }
+.opt.wrongpick { background: var(--bad-soft); border-color: var(--bad); box-shadow: 3px 3px 0 var(--bad); }
+.opt.wrongpick .tag { background: var(--bad); border-color: var(--bad); color: #fff; }
 .opt.lock { cursor: default; }
 .opt.lock:hover { transform: none; box-shadow: none; }
 .opt.correct.lock:hover { box-shadow: 3px 3px 0 var(--ok); }
-.opt.wrongpick.lock:hover { box-shadow: 3px 3px 0 var(--accent); }
+.opt.wrongpick.lock:hover { box-shadow: 3px 3px 0 var(--bad); }
 
 .explain {
   margin-top: 12px; background: var(--sky-soft);
