@@ -45,7 +45,7 @@
 - 🔍 **Per-option explanations**: every distractor is labelled with its trap type (接続不合 / 近義混同 / 呼応衝突 / 時態錯位 / 文体不合 / 語序違反 / 文脈断裂) and the key explains the pattern's connection, co-occurrence and register — not just an answer key
 - 🔁 **Mistake-notebook loop**: wrong answers are collected automatically; correct answers push items down the 1→3→7-day spaced-repetition schedule until they graduate; a weak-point profile links straight into targeted drills
 - 📊 **Per-type stats**: accuracy progress bars per question type + practice history + daily streak
-- 💛 **Optional support after practice**: after finishing a session and reviewing explanations, support the project via WeChat or MBD; the site remains free either way
+- 💛 **Optional support after practice**: after finishing a session and reviewing explanations, support the project via WeChat or MBD. WeChat support is voluntary and separate from the ¥0.98 Xiaohongshu listing; see the listing for item details
 - 🎲 **Mixed drill & mock exam**: one tap to shuffle 10 random questions, or assemble a 20-question mock following the official 問題7〜9 blueprint with a global timer
 - 📥 **Extensible question bank**: paste JSON / upload a file to import your own sets (same ID auto-overwrites); an AI transcription prompt is included for converting your textbooks
 - 📴 **Installable & offline (PWA)**: web manifest + a minimal service worker — add to home screen and keep drilling with no network
