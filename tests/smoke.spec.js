@@ -401,3 +401,37 @@ test('模拟卷：按官方構成组卷（形式判断10 + 組み立て + 文章
   // 全局计时器在走
   await expect(page.locator('#timer')).toBeVisible();
 });
+
+
+test('自愿支持入口：完成文法练习后才显示支持选项', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.support-after-result')).toHaveCount(0);
+  await expect(page.locator('#btn-support-wechat')).toHaveCount(0);
+
+  await page.goto('/#practice');
+  await openGroups(page);
+  await page.locator('#set-cards .setcard h3').first().click();
+  await expect(page.locator('#session-view')).toBeVisible();
+  await expect(page.locator('.support-after-result')).toHaveCount(0);
+
+  const qn = await page.locator('#session-body .qblock').count();
+  for (let i = 0; i < qn; i++) {
+    await page.locator('#session-body .qblock').nth(i).locator('.opt').first().click();
+  }
+  await page.click('#btn-submit');
+  await expect(page.locator('#session-result')).toContainText('/');
+  await expect(page.locator('.support-after-result')).toBeVisible();
+
+  const mbd = page.locator('.support-after-result a');
+  await expect(mbd).toHaveAttribute('href', 'https://mbd.pub/o/bread/mbd-YZWblJ9paA==');
+  await expect(mbd).toHaveAttribute('target', '_blank');
+
+  const modal = page.locator('#qr-modal');
+  await page.click('#btn-support-wechat');
+  await expect(modal).toBeVisible();
+  await expect(modal.locator('img')).toBeVisible();
+  await expect(modal).toContainText('自愿支持 Kumitaku');
+  await expect(modal).toContainText('不支持也可以继续免费使用');
+  await page.click('#qr-close');
+  await expect(modal).toBeHidden();
+});
