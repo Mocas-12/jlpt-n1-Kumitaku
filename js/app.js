@@ -395,7 +395,7 @@
         '<span style="color:var(--muted);font-size:12.5px">（点标签直达定向训练）</span></p>' : '') +
       '<p style="margin-top:12px;font-size:13.5px;color:var(--muted)">当前题库：' + bankN + ' 组题（<a href="#bank">真题·题库</a>导入/管理）</p>' +
       (bnT ? '<p style="margin-top:8px;font-size:13.5px;color:var(--muted)">文法库：已掌握 <b style="color:var(--ink)">' + bnM + ' / ' + bnT + '</b> 条（<a href="#bunkei">去背诵 →</a>）</p>' : '') +
-      '</div></div>';
+      '</div>' +
       '<div class="card"><h3>最近练习</h3>' +
       (streak ? '<p class="streakline">🔥 连续打卡 <b>' + streak + '</b> 天</p>' : '') +
       (dueN ? '<p class="dueline">📌 今日待复习错题 <b style="color:var(--accent)">' + dueN + '</b> 题 <button class="btn sm" id="btn-home-review">开始复习</button></p>' : '') +
@@ -583,7 +583,7 @@
       '<h3>' + esc(s.title) + '</h3>' +
       '<div class="meta"><span class="badge">' + t.label + '</span>' +
       (s.source ? '<a class="badge gray" ' + (s.sourceUrl ? 'href="' + safeUrl(s.sourceUrl) + '" target="_blank" rel="noopener"' : '') + ' onclick="event.stopPropagation()">来源：' + esc(s.source) + '</a>' : '<span class="badge gray">' + (isCustom ? '自定义导入' : t.no) + '</span>') +
-      '<span class="badge gray">' + s.questions.length + ' 問 · 建议 ' + (s.minutes || 3) + ' 分钟</span>' +
+      '<span class="badge gray">' + s.questions.length + ' 問 · 建议 ' + esc(s.minutes || 3) + ' 分钟</span>' +
       (wn ? '<span class="badge red">错题 ' + wn + '</span>' : '') +
       '</div>' + (best ? '<div class="best">' + best + '</div>' : '') +
       '</div>';
@@ -1251,6 +1251,7 @@
       });
       if (seen[s.id]) throw new Error('存在重复 id：' + s.id);
       seen[s.id] = 1;
+      if (s.minutes !== undefined && typeof s.minutes !== 'number') throw new Error(at + '：minutes 必须是数字（分钟数）');
       s.minutes = s.minutes || 3;
     });
     return arr;
@@ -1265,6 +1266,23 @@
     if (d.history !== undefined && !Array.isArray(d.history)) throw new Error('data.history 必须是数组');
     if (d.wrong !== undefined && (typeof d.wrong !== 'object' || d.wrong === null)) throw new Error('data.wrong 必须是对象');
     if (d.days !== undefined && !Array.isArray(d.days)) throw new Error('data.days 必须是数组（练习日期，streak 用）');
+    function isNum(v) { return v === undefined || typeof v === 'number'; }
+    Object.keys(d.stats || {}).forEach(function (k) {
+      var st = d.stats[k];
+      if (!st || typeof st !== 'object' || !isNum(st.c) || !isNum(st.t)) throw new Error('data.stats.' + k + ' 的 c/t 必须是数字');
+    });
+    (d.history || []).forEach(function (r, i) {
+      if (!r || typeof r !== 'object' || !isNum(r.c) || !isNum(r.t)) throw new Error('data.history[' + i + '] 的 c/t 必须是数字');
+    });
+    Object.keys(d.wrong || {}).forEach(function (qid) {
+      var e = d.wrong[qid];
+      if (!e || typeof e !== 'object' || !isNum(e.stage)) throw new Error('data.wrong 的 stage 必须是数字');
+    });
+    if (d.traps !== undefined && d.traps !== null && typeof d.traps === 'object') {
+      Object.keys(d.traps).forEach(function (l) {
+        if (typeof d.traps[l] !== 'number') throw new Error('data.traps 的计数必须是数字');
+      });
+    }
     return d;
   }
 

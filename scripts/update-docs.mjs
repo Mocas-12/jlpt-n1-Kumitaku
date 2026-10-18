@@ -4,7 +4,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 // 题库分片按序拼接，window 垫片让分片的 window.BANK 在函数作用域里可求值
-const src = ['core', 'bun1', 'kumi', 'sho']
+const src = ['core', 'bun1', 'kumi']
   .map((f) => readFileSync(new URL(`../js/bank/${f}.js`, import.meta.url), 'utf8'))
   .join('\n');
 const BANK = new Function('window', src + '\nreturn window.BANK;')({});
@@ -13,9 +13,9 @@ const qs = BANK.reduce((a, s) => a + s.questions.length, 0);
 
 let touched = 0;
 for (const [file, re, repl] of [
-  ['README.zh-CN.md', /(\d+) 组 (\d+) 问/g, () => `${sets} 组 ${qs} 问`],
-  ['README.md', /(\d+) sets \/ (\d+) questions/g, () => `${sets} sets / ${qs} questions`],
-  ['README.ja-JP.md', /(\d+) セット \/ (\d+) 問/g, () => `${sets} セット / ${qs} 問`],
+  ['README.zh-CN.md', /(\d+) 组 \/ (\d+) 道/g, () => `${sets} 组 / ${qs} 道`],
+  ['README.md', /(\d+) sets \/ (\d+) original questions/g, () => `${sets} sets / ${qs} original questions`],
+  ['README.ja-JP.md', /(\d+) セット／(\d+) 問/g, () => `${sets} セット／${qs} 問`],
 ]) {
   const path = new URL('../' + file, import.meta.url);
   const before = readFileSync(path, 'utf8');
